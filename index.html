@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Receipt & Invoice Generator | Saving Sarvahita Foundation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Great+Vibes&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Alex+Brush&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- html2canvas for instant PNG download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Bar -->
+    <header class="app-header no-print">
+      <div class="header-left">
+        <div class="app-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>SSF Generator</span>
+        </div>
+        <h1>Donation Receipt & Invoice Generator</h1>
+      </div>
+      <div class="header-actions">
+        <button id="btnToggleHistory" class="btn btn-secondary" title="View past generated receipts">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          History (<span id="historyCount">0</span>)
+        </button>
+        <button id="btnDownloadImage" class="btn btn-primary" title="Download high quality PNG image">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download PNG
+        </button>
+        <button id="btnPrintReceipt" class="btn btn-accent" title="Print or Save as PDF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          Print / PDF
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Left Panel: Form Controls -->
+      <aside class="editor-panel no-print">
+        <div class="panel-card">
+          <div class="panel-header">
+            <h2>Receipt Details</h2>
+            <span class="subtext">Fill in details; the preview updates instantly</span>
+          </div>
+
+          <form id="receiptForm" onsubmit="event.preventDefault();">
+            <!-- Receipt Meta -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="receiptType">Document Title</label>
+                <input type="text" id="receiptType" value="DONATION RECEIPT">
+              </div>
+              <div class="form-group">
+                <label for="receiptNo">Receipt No.</label>
+                <div class="input-with-action">
+                  <input type="text" id="receiptNo" value="" placeholder="e.g. 6073" required>
+                  <button type="button" id="btnNextNumber" class="btn-icon" title="Auto-increment number">
+                    +1
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="receiptDate">Receipt Date</label>
+                <input type="date" id="receiptDate" required>
+              </div>
+              <div class="form-group">
+                <label for="formNo">Form No. (Optional)</label>
+                <input type="text" id="formNo" placeholder="e.g. 10BD">
+              </div>
+            </div>
+
+            <!-- Donation For / Causes -->
+            <div class="form-group">
+              <label for="donationFor">Donation For (Causes / Purpose)</label>
+              <select id="donationFor">
+                <option value="EDUCATION / HEALTH PROGRAM / ANIMAL WELFARE AND HUNGER SUPPORT" selected>EDUCATION / HEALTH PROGRAM / ANIMAL WELFARE AND HUNGER SUPPORT</option>
+                <option value="CHILD EDUCATION &amp; SCHOLARSHIP SUPPORT">CHILD EDUCATION &amp; SCHOLARSHIP SUPPORT</option>
+                <option value="HEALTHCARE &amp; MEDICAL RELIEF PROGRAM">HEALTHCARE &amp; MEDICAL RELIEF PROGRAM</option>
+                <option value="ANIMAL WELFARE &amp; RESCUE PROGRAM">ANIMAL WELFARE &amp; RESCUE PROGRAM</option>
+                <option value="HUNGER SUPPORT &amp; FOOD DISTRIBUTION">HUNGER SUPPORT &amp; FOOD DISTRIBUTION</option>
+                <option value="WOMEN EMPOWERMENT &amp; LIVELIHOOD">WOMEN EMPOWERMENT &amp; LIVELIHOOD</option>
+                <option value="DISASTER RELIEF &amp; EMERGENCY AID">DISASTER RELIEF &amp; EMERGENCY AID</option>
+                <option value="GENERAL / VOLUNTARY DONATION">GENERAL / VOLUNTARY DONATION</option>
+                <option value="CUSTOM">Other / Custom Purpose...</option>
+              </select>
+              <input type="text" id="donationForCustom" placeholder="Enter custom cause / purpose" style="display: none; margin-top: 6px;">
+            </div>
+
+            <!-- Donor Details -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="donorName">Received with thanks from (Donor Name)</label>
+                <input type="text" id="donorName" placeholder="e.g. WELL WISHER / DONOR NAME" value="" required>
+              </div>
+              <div class="form-group">
+                <label for="donorPan">Donor PAN (Optional)</label>
+                <input type="text" id="donorPan" placeholder="e.g. ABCDE1234F">
+              </div>
+            </div>
+
+            <!-- Financial Details & Mode -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="paymentMode">Payment Mode / Instrument</label>
+                <input type="text" id="paymentMode" list="paymentModeList" placeholder="e.g. ONLINE TRANSFER / UPI" value="">
+                <datalist id="paymentModeList">
+                  <option value="ONLINE TRANSFER">
+                  <option value="UPI">
+                  <option value="CHEQUE">
+                  <option value="CASH">
+                  <option value="DD">
+                  <option value="BANK TRANSFER">
+                  <option value="NEFT/RTGS">
+                </datalist>
+              </div>
+              <div class="form-group">
+                <label for="transactionId">Transaction ID / Cheque / Ref No.</label>
+                <input type="text" id="transactionId" placeholder="e.g. TXN123456789" value="">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="bankName">Drawn on (Bank Name)</label>
+                <input type="text" id="bankName" placeholder="e.g. State Bank of India / HDFC Bank">
+              </div>
+              <div class="form-group">
+                <label for="amount">Amount (₹)</label>
+                <div class="currency-input">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" id="amount" min="1" step="any" placeholder="e.g. 1000.00" value="" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Amount in Words -->
+            <div class="form-group">
+              <div class="label-with-toggle">
+                <label for="amountInWords">Amount in Words</label>
+                <span class="badge-auto">Auto-generated</span>
+              </div>
+              <input type="text" id="amountInWords" value="" placeholder="Auto-generated from amount">
+            </div>
+
+            <!-- Customization Accordion: Organization & Signatory -->
+            <details class="accordion-section">
+              <summary>
+                <span>🏢 Organization & Reg Details</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </summary>
+              <div class="accordion-body">
+                <div class="form-group">
+                  <label for="orgName">Organization Name</label>
+                  <input type="text" id="orgName" value="SAVING SARVAHITA FOUNDATION">
+                </div>
+                <div class="form-group">
+                  <label for="orgAddress">Registered Office Address</label>
+                  <textarea id="orgAddress" rows="2">Flat 609, B Wing, Vklal, Vishnu, Ph 1 Kokani Pada, Dahisar, Mumbai, Dahisar East, Maharashtra, India, 400068</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="orgHeadAddress">Head Office Address</label>
+                  <textarea id="orgHeadAddress" rows="2">Office No 1, Double Basement Sai Krupa Mall, LT Road Tawde Wadi, Opp Dahisar Railway Station, Dahisar West, Mumbai, Maharashtra, India, 400068</textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="orgPhone">Phone / WhatsApp</label>
+                    <input type="text" id="orgPhone" value="+91 8828428845">
+                  </div>
+                  <div class="form-group">
+                    <label for="orgEmail">Email</label>
+                    <input type="email" id="orgEmail" value="savingsarvahitafoundation@gmail.com">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="orgWebsite">Website</label>
+                    <input type="text" id="orgWebsite" value="savingsarvahita.org">
+                  </div>
+                  <div class="form-group">
+                    <label for="orgInsta">Instagram</label>
+                    <input type="text" id="orgInsta" value="@savingsarvahitafoundation">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="orgSub">Registration Subtitle</label>
+                    <input type="text" id="orgSub" value="Registered Under MCA / Section 8 No. U88900MH2026NPL472880">
+                  </div>
+                  <div class="form-group">
+                    <label for="orgMotto">Motto / Tagline</label>
+                    <input type="text" id="orgMotto" value="Together For A Better Tomorrow">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="orgCin">CIN / Registration Act</label>
+                    <input type="text" id="orgCin" value="U88900MH2026NPL472880">
+                  </div>
+                  <div class="form-group">
+                    <label for="orgPan">PAN</label>
+                    <input type="text" id="orgPan" value="ABUCS1753L">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="orgTan">TAN</label>
+                    <input type="text" id="orgTan" value="MUMS48324K">
+                  </div>
+                  <div class="form-group">
+                    <label for="orgDarpan">NGO Registration / DARPAN ID</label>
+                    <input type="text" id="orgDarpan" value="MH/2026/1136477">
+                  </div>
+                </div>
+
+                <!-- Bank Account Transfer Details Section -->
+                <div style="margin: 14px 0 6px; font-weight: 700; color: #0284c7; font-size: 0.85rem;">
+                  🏦 Foundation Bank Transfer Details (Direct Donation)
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="bankAccName">Beneficiary / A/C Name</label>
+                    <input type="text" id="bankAccName" value="SAVING SARVAHITA FOUNDATION">
+                  </div>
+                  <div class="form-group">
+                    <label for="bankAccNo">Account Number (A/C No)</label>
+                    <input type="text" id="bankAccNo" value="6057762991">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="bankIfsc">Branch IFSC Code</label>
+                    <input type="text" id="bankIfsc" value="KKBK0000653">
+                  </div>
+                  <div class="form-group">
+                    <label for="bankOrgName">Bank Name</label>
+                    <input type="text" id="bankOrgName" value="Kotak Mahindra Bank">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="bankBranch">Branch Name</label>
+                  <input type="text" id="bankBranch" value="MUMBAI - BORIVALI (WEST)">
+                </div>
+
+                <div class="form-group">
+                  <label for="orgPledge">Footer Pledge Message</label>
+                  <input type="text" id="orgPledge" value="EVEN THE SMALLEST OF CONTRIBUTIONS ARE USED TO BUILD A BETTER FUTURE FOR TOMORROW">
+                </div>
+              </div>
+            </details>
+
+            <!-- Signatory, Stamp & QR Accordion -->
+            <details class="accordion-section" open>
+              <summary>
+                <span>✍️ Seal, Signature & QR Options</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </summary>
+              <div class="accordion-body">
+                <div class="form-row">
+                  <label class="toggle-control">
+                    <input type="checkbox" id="showStamp" checked>
+                    <span class="toggle-switch"></span>
+                    <span>Show Official Seal/Stamp</span>
+                  </label>
+                  <label class="toggle-control">
+                    <input type="checkbox" id="showSignature" checked>
+                    <span class="toggle-switch"></span>
+                    <span>Show Signature</span>
+                  </label>
+                </div>
+                <div class="form-row" style="margin-top: 10px;">
+                  <label class="toggle-control">
+                    <input type="checkbox" id="showQrCode" checked>
+                    <span class="toggle-switch"></span>
+                    <span>Show Scan & Pay QR Code</span>
+                  </label>
+                  <label class="toggle-control">
+                    <input type="checkbox" id="useOfficialLogo" checked>
+                    <span class="toggle-switch"></span>
+                    <span>Use Official Website Logo</span>
+                  </label>
+                </div>
+                <div class="form-row" style="margin-top: 10px;">
+                  <label class="toggle-control">
+                    <input type="checkbox" id="showBankDetails" checked>
+                    <span class="toggle-switch"></span>
+                    <span>Show Bank Transfer Details</span>
+                  </label>
+                </div>
+              </div>
+            </details>
+
+            <!-- Form Actions -->
+            <div class="form-buttons">
+              <button type="button" id="btnSaveToHistory" class="btn btn-primary full-width">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Save Receipt
+              </button>
+            </div>
+          </form>
+        </div>
+      </aside>
+
+      <!-- Right Panel: Live Receipt Preview -->
+      <section class="preview-panel">
+        <div class="preview-toolbar no-print">
+          <div class="toolbar-left">
+            <span class="preview-indicator">
+              <span class="pulse-dot"></span> Live Preview
+            </span>
+            <span class="paper-size-badge">A4 Portrait</span>
+          </div>
+          <div class="toolbar-right">
+            <div class="zoom-controls">
+              <button id="btnZoomOut" class="btn-icon" title="Zoom Out">-</button>
+              <span id="zoomLevel">100%</span>
+              <button id="btnZoomIn" class="btn-icon" title="Zoom In">+</button>
+              <button id="btnZoomReset" class="btn-icon" title="Reset Zoom">Fit</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Receipt Paper Container -->
+        <div class="paper-viewport" id="paperViewport">
+
+          <!-- ============================================================= -->
+          <!-- TEMPLATE 1: 80G TAX BENEFIT CERTIFICATE (A4 PORTRAIT)        -->
+          <!-- Matches reference PDF                                        -->
+          <!-- ============================================================= -->
+          <div class="certificate-paper" id="certificate80GCard">
+            <div class="cert-inner-container">
+              <!-- Center Watermark -->
+              <div class="cert-watermark">
+                <img src="assets/logo.png" alt="Watermark" id="certWatermarkImg">
+              </div>
+
+              <!-- Header -->
+              <header class="cert-header">
+                <div class="cert-logo-box">
+                  <img src="assets/logo.png" alt="Trust Logo" class="cert-logo-img" id="certLogoImg">
+                </div>
+                <div class="cert-header-text">
+                  <h1 class="cert-trust-name" id="certTrustName">SAVING SARVAHITA FOUNDATION</h1>
+                  <div class="cert-reg-sub" id="certRegSub">Registered Under MCA / Section 8 No. U88900MH2026NPL472880</div>
+                  <div class="cert-motto" id="certMotto">Together For A Better Tomorrow</div>
+                </div>
+              </header>
+
+              <!-- Cyan / Blue Web, Email, WhatsApp & Insta Bar -->
+              <div class="cert-contact-band">
+                <div class="cert-band-item">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="#0284c7">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                  <span id="certWebsite">savingsarvahita.org</span>
+                </div>
+                <div class="cert-band-item">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="#0284c7">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <polyline points="22,6 12,13 2,6" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                  <span id="certEmail">savingsarvahitafoundation@gmail.com</span>
+                </div>
+                <div class="cert-band-item">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="#16a34a">
+                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.838.813 2.796.814 3.183 0 5.769-2.588 5.77-5.768.001-3.182-2.585-5.798-5.77-5.798zm3.364 8.16c-.145.409-.73.754-1.023.784-.282.029-.64.135-2.072-.459-1.834-.761-2.999-2.639-3.089-2.761-.09-.12-1.282-1.705-1.282-3.253 0-1.548.813-2.31 1.1-2.602.288-.292.628-.364.838-.364.21 0 .42.003.604.012.195.01.455-.074.71.538.266.638.905 2.21.986 2.37.08.16.134.348.026.562-.107.214-.162.348-.321.536-.16.188-.337.42-.481.563-.16.16-.328.334-.141.654.187.32.83 1.368 1.782 2.217 1.224 1.092 2.256 1.43 2.576 1.59.32.16.507.134.694-.08.188-.214.802-.932 1.015-1.252.213-.32.427-.267.721-.16.294.107 1.86.877 2.181 1.037.32.16.534.24.614.374.08.133.08.773-.065 1.182z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12c0 1.95.56 3.77 1.53 5.31L2 22l4.83-1.49C8.32 21.39 10.1 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18.05c-1.63 0-3.15-.49-4.44-1.33l-.32-.21-2.87.89.9-2.79-.23-.35C4.12 14.94 3.6 13.51 3.6 12c0-4.63 3.77-8.4 8.4-8.4s8.4 3.77 8.4 8.4-3.77 8.4-8.4 8.4z"/>
+                  </svg>
+                  <span id="certPhone">+91 8828428845</span>
+                </div>
+                <div class="cert-band-item">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="#db2777">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                  <span id="certInsta">@savingsarvahitafoundation</span>
+                </div>
+              </div>
+
+              <!-- Thank You & Certificate Banner -->
+              <div class="cert-title-section">
+                <div class="cert-thank-you-msg" id="certThankMsg">Thank you ! for your valuable GIFT</div>
+                <div class="cert-badge-box">
+                  <span id="certDocHeading">DONATION RECEIPT</span>
+                </div>
+              </div>
+
+              <!-- Main Details Rows -->
+              <div class="cert-fields-grid">
+                <!-- Line 1: Date | Receipt no | Form no -->
+                <div class="cert-line-row row-three-col">
+                  <div class="cert-field-item">
+                    <span class="cert-label">Date :</span>
+                    <span class="cert-val font-bold" id="certDate"></span>
+                  </div>
+                  <div class="cert-field-item center-col">
+                    <span class="cert-label">Receipt no. :</span>
+                    <span class="cert-val font-bold highlight-val" id="certReceiptNo"></span>
+                  </div>
+                  <div class="cert-field-item right-col">
+                    <span class="cert-label">Form no. :</span>
+                    <span class="cert-val underline-short" id="certFormNo"></span>
+                  </div>
+                </div>
+
+                <!-- Line 2: Donation For -->
+                <div class="cert-line-row">
+                  <span class="cert-label nowrap">Donation For :</span>
+                  <span class="cert-val font-bold uppercase underline-span flex-grow" id="certDonationFor">EDUCATION / HEALTH PROGRAM / ANIMAL WELFARE AND HUNGER SUPPORT</span>
+                </div>
+
+                <!-- Line 3: Received with thanks from & PAN -->
+                <div class="cert-line-row row-two-col">
+                  <div class="cert-field-item flex-grow">
+                    <span class="cert-label nowrap">Received with thanks from</span>
+                    <span class="cert-val font-bold uppercase underline-span flex-grow" id="certDonorName"></span>
+                  </div>
+                  <div class="cert-field-item pan-col">
+                    <span class="cert-label">PAN</span>
+                    <span class="cert-val underline-span fixed-pan" id="certDonorPan"></span>
+                  </div>
+                </div>
+
+                <!-- Line 4: by Cheque/Cash / DD No & Transaction ID -->
+                <div class="cert-line-row row-two-col">
+                  <div class="cert-field-item flex-grow">
+                    <span class="cert-label nowrap">by Cheque/Cash / DD No.</span>
+                    <span class="cert-val font-bold uppercase underline-span flex-grow" id="certPaymentMode"></span>
+                  </div>
+                  <div class="cert-field-item txn-col">
+                    <span class="cert-label nowrap">Transaction ID</span>
+                    <span class="cert-val font-bold underline-span fixed-txn" id="certTransactionId"></span>
+                  </div>
+                </div>
+
+                <!-- Line 5: Drawn on & Amount -->
+                <div class="cert-line-row">
+                  <span class="cert-label nowrap">Drawn on</span>
+                  <span class="cert-val underline-span inline-bank" id="certBankName"></span>
+                  <span class="cert-label nowrap">(Bank) on account of donation of Rs.</span>
+                  <span class="cert-val font-bold underline-span inline-amt" id="certAmount"></span>
+                </div>
+
+                <!-- Line 6: Rs. In words -->
+                <div class="cert-line-row">
+                  <span class="cert-label nowrap">Rs. In words</span>
+                  <span class="cert-val font-bold uppercase underline-span flex-grow" id="certAmountInWords"></span>
+                </div>
+              </div>
+
+              <!-- Compliance & Bank Transfer Section -->
+              <div class="cert-info-row">
+                <!-- Left: Compliance Identifiers with Icon Badges -->
+                <div class="cert-compliance-box">
+                  <div class="comp-line">
+                    <span class="comp-icon" title="PAN">
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <circle cx="12" cy="12" r="11" fill="#15803d" />
+                        <path d="M17 7H7c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-1 2v1.5h-8V9h8zm-5 6H8v-1.5h3V15zm5 0h-3v-1.5h3V15zm0-3H8v-1.5h8V12z" fill="#ffffff"/>
+                      </svg>
+                    </span>
+                    <span class="comp-label">PAN :</span>
+                    <span class="comp-val font-bold" id="certPan">ABUCS1753L</span>
+                  </div>
+                  <div class="comp-line">
+                    <span class="comp-icon" title="TAN">
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <circle cx="12" cy="12" r="11" fill="#15803d" />
+                        <path d="M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" fill="#ffffff"/>
+                      </svg>
+                    </span>
+                    <span class="comp-label">TAN :</span>
+                    <span class="comp-val font-bold" id="certTan">MUMS48324K</span>
+                  </div>
+                  <div class="comp-line">
+                    <span class="comp-icon" title="CIN">
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <circle cx="12" cy="12" r="11" fill="#15803d" />
+                        <path d="M12 7V4H6v16h12V7h-6zm-1 10H8v-2h3v2zm0-4H8v-2h3v2zm0-4H8V7h3v2zm5 8h-3v-2h3v2zm0-4h-3v-2h3v2zm0-4h-3V7h3v2z" fill="#ffffff"/>
+                      </svg>
+                    </span>
+                    <span class="comp-label">CIN :</span>
+                    <span class="comp-val font-bold" id="certCin">U88900MH2026NPL472880</span>
+                  </div>
+                  <div class="comp-line">
+                    <span class="comp-icon" title="NGO DARPAN ID">
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <circle cx="12" cy="12" r="11" fill="#15803d" />
+                        <path d="M15 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm-6 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2c-1.8 0-4 .9-4 2.5V16h8v-1.5c0-1.6-2.2-2.5-4-2.5zm6 0c-.3 0-.6.03-.9.08.7.6 1.1 1.4 1.1 2.42V16h4.8v-1.5c0-1.6-2.2-2.5-4.8-2.5z" fill="#ffffff"/>
+                      </svg>
+                    </span>
+                    <span class="comp-label">NGO DARPAN ID :</span>
+                    <span class="comp-val font-bold" id="certDarpan">MH/2026/1136477</span>
+                  </div>
+                </div>
+
+                <!-- Right: Foundation Bank Transfer Details -->
+                <div class="cert-bank-details-card" id="certBankCard">
+                  <div class="cert-bank-header">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="#0284c7">
+                      <path d="M2 10h20v2H2zm2 4h4v5H4zm6 0h4v5h-4zm6 0h4v5h-4zM12 2L2 7v2h20V7zM2 20h20v2H2z"/>
+                    </svg>
+                    <span>Bank Transfer Details (NEFT / RTGS / IMPS)</span>
+                  </div>
+                  <div class="bank-details-table">
+                    <div class="bank-row"><span class="b-lbl">A/C Name:</span> <span class="b-val font-bold" id="certAccName">SAVING SARVAHITA FOUNDATION</span></div>
+                    <div class="bank-row"><span class="b-lbl">A/C No:</span> <span class="b-val font-bold highlight-acc" id="certAccNo">6057762991</span></div>
+                    <div class="bank-row"><span class="b-lbl">Branch IFSC:</span> <span class="b-val font-bold" id="certAccIfsc">KKBK0000653</span></div>
+                    <div class="bank-row"><span class="b-lbl">Bank Name:</span> <span class="b-val font-bold" id="certAccBank">Kotak Mahindra Bank</span></div>
+                    <div class="bank-row"><span class="b-lbl">Branch Name:</span> <span class="b-val" id="certAccBranch">MUMBAI - BORIVALI (WEST)</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dashed Horizontal Divider -->
+              <div class="cert-dashed-line"></div>
+
+              <!-- Signatory & Scan QR Section -->
+              <div class="cert-sign-qr-section">
+                <!-- Left: Signatory & Stamp -->
+                <div class="cert-signatory-side">
+                  <div class="for-trust-text">FOR</div>
+                  <div class="for-trust-name" id="certForTrust">Saving Sarvahita Foundation</div>
+
+                  <div class="cert-stamp-sign-wrap">
+                    <!-- Real Stamp from assets/Stamp.png -->
+                    <img src="assets/Stamp.png" alt="Official Stamp" class="cert-stamp-img" id="certStampImg">
+                    <!-- Real Signature from assets/Sign.png -->
+                    <img src="assets/Sign.png" alt="Authorized Signature" class="cert-sign-img" id="certSignImg">
+                  </div>
+
+                  <div class="cert-signatory-label" id="certSignatoryTitle">Authorized Signatory</div>
+                </div>
+
+                <!-- Right: Scan Code -->
+                <div class="cert-qr-side" id="certQrSide">
+                  <div class="scan-code-title">SCAN CODE</div>
+                  <div class="scan-code-box">
+                    <img src="assets/qr-gpay.jpeg" alt="Scan QR Code" class="cert-qr-img" id="certQrImg">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer Address & Contacts -->
+              <footer class="cert-footer">
+                <div class="footer-reach-title">You can reach us here :</div>
+                <div class="footer-pledge" id="certFooterPledge">EVEN THE SMALLEST OF CONTRIBUTIONS ARE USED TO BUILD A BETTER FUTURE FOR TOMORROW</div>
+                <div class="footer-reg-act" id="certFooterAct">Registered under MCA / Section 8 Act No. U88900MH2026NPL472880</div>
+                <div class="footer-offices-grid">
+                  <div class="footer-office-col">
+                    <div class="footer-office-badge">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="#15803d">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                      </svg>
+                      <span>REGISTERED OFFICE</span>
+                    </div>
+                    <div class="footer-office-text" id="certRegAddress">Flat 609, B Wing, Vklal, Vishnu, Ph 1 Kokani Pada, Dahisar, Mumbai, Dahisar East, Maharashtra, India, 400068</div>
+                  </div>
+                  <div class="footer-office-divider"></div>
+                  <div class="footer-office-col">
+                    <div class="footer-office-badge">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="#0284c7">
+                        <path d="M12 7V4H6v16h12V7h-6zm-1 10H8v-2h3v2zm0-4H8v-2h3v2zm0-4H8V7h3v2zm5 8h-3v-2h3v2zm0-4h-3v-2h3v2zm0-4h-3V7h3v2z"/>
+                      </svg>
+                      <span>HEAD OFFICE</span>
+                    </div>
+                    <div class="footer-office-text" id="certHeadAddress">Office No 1, Double Basement Sai Krupa Mall, LT Road Tawde Wadi, Opp Dahisar Railway Station, Dahisar West, Mumbai, Maharashtra, India, 400068</div>
+                  </div>
+                </div>
+                <div class="footer-contact-phones" id="certFooterContact">Contact / WhatsApp : +91 8828428845 &nbsp;|&nbsp; Instagram : @savingsarvahitafoundation</div>
+              </footer>
+            </div>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- TEMPLATE 2: CLASSIC DONATION RECEIPT (A4 LANDSCAPE)          -->
+          <!-- ============================================================= -->
+          <div class="receipt-paper" id="receiptCard" style="display: none;">
+            <!-- Outer Double Frame Border -->
+            <div class="receipt-inner-frame">
+
+              <!-- HEADER SECTION -->
+              <header class="receipt-header">
+                <!-- Left: Foundation Logo -->
+                <div class="header-logo-container">
+                  <img id="viewOfficialLogo" src="assets/logo.png" alt="Saving Sarvahita Foundation Logo" class="official-logo-img">
+                  <div id="viewSvgLogo" class="ssf-logo-svg" style="display: none;">
+                    <svg viewBox="0 0 220 220" width="125" height="125">
+                      <!-- Circular Arc Track -->
+                      <circle cx="110" cy="110" r="102" fill="#fff" stroke="#154273" stroke-width="3.5" />
+                      <circle cx="110" cy="110" r="95" fill="#fcfdff" stroke="#eab308" stroke-dasharray="3 3" stroke-width="1.5" />
+
+                      <!-- Curved Text for SAVING SARVAHITA FOUNDATION -->
+                      <path id="circleTextPathTop" d="M 28 110 A 82 82 0 0 1 192 110" fill="none" />
+                      <text font-family="'Inter', 'Montserrat', sans-serif" font-weight="900" font-size="14.5" fill="#13365e" letter-spacing="1.5">
+                        <textPath href="#circleTextPathTop" startOffset="50%" text-anchor="middle">
+                          SAVING SARVAHITA
+                        </textPath>
+                      </text>
+
+                      <path id="circleTextPathSub" d="M 45 110 A 65 65 0 0 1 175 110" fill="none" />
+                      <text font-family="'Inter', sans-serif" font-weight="800" font-size="10.5" fill="#e05307" letter-spacing="2">
+                        <textPath href="#circleTextPathSub" startOffset="50%" text-anchor="middle">
+                          FOUNDATION
+                        </textPath>
+                      </text>
+
+                      <!-- Center Illustration: Loving Hands + Human Figures + Sprout -->
+                      <g transform="translate(110, 118)">
+                        <!-- Green Wheat/Leaves Left & Right -->
+                        <path d="M -45 -10 C -52 -30 -35 -40 -38 -25 C -40 -15 -35 -5 -30 2" fill="#22c55e" opacity="0.8" />
+                        <path d="M 45 -10 C 52 -30 35 -40 38 -25 C 40 -15 35 -5 30 2" fill="#22c55e" opacity="0.8" />
+                        <path d="M -50 -5 C -60 -18 -45 -28 -46 -15" fill="#15803d" opacity="0.7"/>
+                        <path d="M 50 -5 C 60 -18 45 -28 46 -15" fill="#15803d" opacity="0.7"/>
+
+                        <!-- Blue Cupping Hands -->
+                        <path d="M -42 2 C -35 22 -15 28 0 28 C 15 28 35 22 42 2 C 30 18 10 21 0 21 C -10 21 -30 18 -42 2 Z" fill="#0f3764" />
+
+                        <!-- Center Child / Adult Figures with Heart -->
+                        <circle cx="-16" cy="-18" r="5" fill="#f97316" />
+                        <path d="M -23 -11 C -23 -4 -9 -4 -9 -11 C -9 -15 -23 -15 -23 -11" fill="#f97316" />
+
+                        <circle cx="0" cy="-24" r="6" fill="#0284c7" />
+                        <path d="M -9 -16 C -9 -7 9 -7 9 -16 C 9 -21 -9 -21 -9 -16" fill="#0284c7" />
+
+                        <circle cx="16" cy="-18" r="5" fill="#16a34a" />
+                        <path d="M 9 -11 C 9 -4 23 -4 23 -11 C 23 -15 9 -15 9 -11" fill="#16a34a" />
+
+                        <path d="M 0 -7 C -8 1 0 8 0 8 C 0 8 8 1 0 -7 Z" fill="#22c55e" />
+                      </g>
+
+                      <!-- Bottom Navy Ribbon on Logo -->
+                      <path d="M 12 148 L 208 148 L 198 162 L 208 174 L 12 174 L 22 162 Z" fill="#0f3764" />
+                      <text x="110" y="164" font-family="'Inter', sans-serif" font-weight="800" font-size="8.8" fill="#ffffff" text-anchor="middle" letter-spacing="1">
+                        TOGETHER FOR A BETTER TOMORROW
+                      </text>
+
+                      <!-- Hindi Slogan Underneath Logo -->
+                      <text x="110" y="188" font-family="'Inter', sans-serif" font-weight="700" font-size="7.5" fill="#ea580c" text-anchor="middle">
+                        एक संकल्प  •  एक दिशा  •  एक परिवर्तन
+                      </text>
+                      <text x="110" y="198" font-family="'Inter', sans-serif" font-weight="600" font-size="6.8" fill="#475569" text-anchor="middle">
+                        SERVICE  |  COLLABORATION  |  TRANSFORMATION
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Center: Organization Title, Subtitles, Ribbon, Office -->
+                <div class="header-main-info">
+                  <h1 class="foundation-title" id="viewOrgName">SAVING SARVAHITA FOUNDATION</h1>
+
+                  <div class="foundation-motto-row">
+                    <span class="motto-green">SEVA</span>
+                    <span class="motto-divider">|</span>
+                    <span class="motto-blue">SAHAYOG</span>
+                    <span class="motto-divider">|</span>
+                    <span class="motto-orange">SAMARPAN</span>
+                  </div>
+
+                  <!-- Navy Banner Ribbon -->
+                  <div class="banner-ribbon-wrapper">
+                    <div class="ribbon-tail left"></div>
+                    <div class="ribbon-body">
+                      TOGETHER FOR A BETTER TOMORROW
+                    </div>
+                    <div class="ribbon-tail right"></div>
+                  </div>
+
+                  <!-- Address & Contact Info -->
+                  <div class="header-contact-details">
+                    <div class="contact-line office-address">
+                      <div class="icon-circle">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                      </div>
+                      <div class="address-text">
+                        <strong>Registered Office:</strong> <span id="viewOrgAddress">Flat 609, B Wing, Vklal, Vishnu, Ph 1 Kokani Pada, Dahisar, Mumbai, Dahisar East, Maharashtra, India, 400068</span>
+                        &nbsp;|&nbsp;
+                        <strong>Head Office:</strong> <span id="viewOrgHeadAddress">Office No 1, Double Basement Sai Krupa Mall, LT Road Tawde Wadi, Opp Dahisar Railway Station, Dahisar West, Mumbai, Maharashtra, India, 400068</span>
+                      </div>
+                    </div>
+
+                    <!-- Contact & Social Details Grid -->
+                    <div class="contact-badges-wrap">
+                      <!-- Phone / WhatsApp -->
+                      <div class="contact-pill whatsapp-pill">
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="#25D366">
+                          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.838.813 2.796.814 3.183 0 5.769-2.588 5.77-5.768.001-3.182-2.585-5.798-5.77-5.798zm3.364 8.16c-.145.409-.73.754-1.023.784-.282.029-.64.135-2.072-.459-1.834-.761-2.999-2.639-3.089-2.761-.09-.12-1.282-1.705-1.282-3.253 0-1.548.813-2.31 1.1-2.602.288-.292.628-.364.838-.364.21 0 .42.003.604.012.195.01.455-.074.71.538.266.638.905 2.21.986 2.37.08.16.134.348.026.562-.107.214-.162.348-.321.536-.16.188-.337.42-.481.563-.16.16-.328.334-.141.654.187.32.83 1.368 1.782 2.217 1.224 1.092 2.256 1.43 2.576 1.59.32.16.507.134.694-.08.188-.214.802-.932 1.015-1.252.213-.32.427-.267.721-.16.294.107 1.86.877 2.181 1.037.32.16.534.24.614.374.08.133.08.773-.065 1.182z"/>
+                          <path d="M12 2C6.48 2 2 6.48 2 12c0 1.95.56 3.77 1.53 5.31L2 22l4.83-1.49C8.32 21.39 10.1 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18.05c-1.63 0-3.15-.49-4.44-1.33l-.32-.21-2.87.89.9-2.79-.23-.35C4.12 14.94 3.6 13.51 3.6 12c0-4.63 3.77-8.4 8.4-8.4s8.4 3.77 8.4 8.4-3.77 8.4-8.4 8.4z"/>
+                        </svg>
+                        <span id="viewOrgPhone">+91 8828428845</span>
+                      </div>
+
+                      <!-- Email -->
+                      <div class="contact-pill email-pill">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+                          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <span id="viewOrgEmail">savingsarvahitafoundation@gmail.com</span>
+                      </div>
+
+                      <!-- Website -->
+                      <div class="contact-pill website-pill">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="#0284c7">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        <span id="viewOrgWebsite">savingsarvahita.org</span>
+                      </div>
+
+                      <!-- Instagram -->
+                      <div class="contact-pill insta-pill">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="#E1306C">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        <span id="viewOrgInsta">@savingsarvahitafoundation</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Official Registration Credentials Table -->
+                <div class="header-credentials-box">
+                  <table class="credentials-table">
+                    <tr>
+                      <td class="cred-label">CIN</td>
+                      <td class="cred-sep">:</td>
+                      <td class="cred-val" id="viewOrgCin">U88900MH2026NPL472880</td>
+                    </tr>
+                    <tr>
+                      <td class="cred-label">PAN</td>
+                      <td class="cred-sep">:</td>
+                      <td class="cred-val" id="viewOrgPan">ABUCS1753L</td>
+                    </tr>
+                    <tr>
+                      <td class="cred-label">TAN</td>
+                      <td class="cred-sep">:</td>
+                      <td class="cred-val" id="viewOrgTan">MUMS48324K</td>
+                    </tr>
+                    <tr>
+                      <td class="cred-label">DARPAN ID</td>
+                      <td class="cred-sep">:</td>
+                      <td class="cred-val" id="viewOrgDarpan">MH/2026/1136477</td>
+                    </tr>
+                  </table>
+                </div>
+              </header>
+
+              <!-- DIVIDER WITH FLOURISH & TITLE -->
+              <div class="receipt-title-band">
+                <div class="flourish flourish-left">
+                  <svg viewBox="0 0 100 20" width="80" height="16">
+                    <path d="M 0 10 Q 30 18 60 10 T 90 10" fill="none" stroke="#22c55e" stroke-width="1.5" />
+                    <circle cx="95" cy="10" r="3" fill="#22c55e" />
+                    <circle cx="85" cy="6" r="1.5" fill="#16a34a" />
+                  </svg>
+                </div>
+                <div class="receipt-main-heading" id="viewDocHeading">DONATION RECEIPT</div>
+                <div class="flourish flourish-right">
+                  <svg viewBox="0 0 100 20" width="80" height="16">
+                    <path d="M 10 10 Q 40 2 70 10 T 100 10" fill="none" stroke="#22c55e" stroke-width="1.5" />
+                    <circle cx="5" cy="10" r="3" fill="#22c55e" />
+                    <circle cx="15" cy="14" r="1.5" fill="#16a34a" />
+                  </svg>
+                </div>
+
+                <!-- Receipt Number Tag Box -->
+                <div class="receipt-no-tag-container">
+                  <span class="receipt-no-label">Receipt No.</span>
+                  <span class="receipt-no-value" id="viewReceiptNo"></span>
+                </div>
+              </div>
+
+              <!-- RECEIPT BODY: Two Columns -->
+              <div class="receipt-body">
+                <!-- Left Column: Key Fields Table -->
+                <div class="receipt-details-col">
+                  <table class="receipt-fields-table">
+                    <tr>
+                      <td class="field-title">Receipt Date</td>
+                      <td class="field-colon">:</td>
+                      <td class="field-content font-bold" id="viewReceiptDate"></td>
+                    </tr>
+                    <tr>
+                      <td class="field-title">Received From</td>
+                      <td class="field-colon">:</td>
+                      <td class="field-content font-bold donor-name-highlight" id="viewDonorName"></td>
+                    </tr>
+                    <tr>
+                      <td class="field-title">Amount Received</td>
+                      <td class="field-colon">:</td>
+                      <td class="field-content font-bold amount-highlight" id="viewAmount"></td>
+                    </tr>
+                    <tr>
+                      <td class="field-title">Amount in Words</td>
+                      <td class="field-colon">:</td>
+                      <td class="field-content font-medium capitalize" id="viewAmountInWords"></td>
+                    </tr>
+                    <tr>
+                      <td class="field-title">Mode of Payment</td>
+                      <td class="field-colon">:</td>
+                      <td class="field-content">
+                        <span id="viewPaymentMode" class="font-bold"></span>
+                        <span class="transaction-segment">
+                          <span class="sub-label">Transaction ID</span>
+                          <span class="sub-colon">:</span>
+                          <span id="viewTransactionId" class="font-bold"></span>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="field-title align-top">Purpose of Donation</td>
+                      <td class="field-colon align-top">:</td>
+                      <td class="field-content purpose-text" id="viewPurpose">
+                        EDUCATION / HEALTH PROGRAM / ANIMAL WELFARE AND HUNGER SUPPORT
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Official Scan & Donate QR Card -->
+                  <div class="receipt-qr-card" id="viewQrScanCard">
+                    <div class="qr-image-frame">
+                      <img src="assets/qr-gpay.jpeg" alt="Scan & Pay / Donate UPI QR" class="qr-scan-img">
+                    </div>
+                    <div class="qr-details-text">
+                      <div class="qr-header-row">
+                        <span class="qr-title" id="viewQrTitle">Scan to Support Us</span>
+                        <span class="qr-badge-live">Instant UPI</span>
+                      </div>
+                      <div class="qr-upi-badge">
+                        UPI ID: <strong>8828428845@okbizaxis</strong>
+                      </div>
+                      <div class="qr-supported-apps">
+                        <span>GPay</span> • <span>PhonePe</span> • <span>Paytm</span> • <span>BHIM</span> • <span>Any UPI</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Column: Signatory Area -->
+                <div class="receipt-sidebar-col">
+                  <!-- Signatory & Stamp Area -->
+                  <div class="signatory-container">
+                    <!-- Real Foundation Stamp -->
+                    <div class="official-stamp-wrapper" id="viewStampWrapper">
+                      <img src="assets/Stamp.png" alt="Official Foundation Stamp" class="real-stamp-img" id="viewStampReal">
+                    </div>
+
+                    <!-- Signature & Signatory text -->
+                    <div class="signature-block">
+                      <div class="for-foundation-text">For Saving Sarvahita Foundation</div>
+
+                      <!-- Real Signature Image from assets/Sign.png -->
+                      <div class="signature-graphic" id="viewSignatureWrapper">
+                        <img src="assets/Sign.png" alt="Authorized Signature" class="real-sign-img" id="viewSignReal">
+                      </div>
+
+                      <div class="signature-line"></div>
+                      <div class="signatory-title" id="viewSignatoryTitle">Authorised Signatory</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- End .receipt-inner-frame -->
+          </div><!-- End #receiptCard -->
+        </div><!-- End .paper-viewport -->
+      </section>
+    </main>
+
+    <!-- Slide-over History Drawer -->
+    <div class="history-drawer-backdrop" id="historyBackdrop"></div>
+    <aside class="history-drawer no-print" id="historyDrawer">
+      <div class="drawer-header">
+        <h3>Generated Receipts History</h3>
+        <button id="btnCloseHistory" class="btn-icon">&times;</button>
+      </div>
+      <div class="drawer-body">
+        <div id="historyList" class="history-list">
+          <!-- Populated dynamically via JS -->
+          <div class="empty-history">No receipts saved yet. Click "Save Receipt" to save your work.</div>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button id="btnClearAllHistory" class="btn btn-danger btn-sm">Clear All History</button>
+      </div>
+    </aside>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-notification"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

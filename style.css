@@ -1,0 +1,1914 @@
+/* ==========================================================================
+   DONATION RECEIPT & INVOICE GENERATOR - STYLESHEET
+   Pure Vanilla CSS - Designed for UI and Print Precision
+   ========================================================================== */
+
+:root {
+  --primary-navy: #0f2b4c;
+  --secondary-navy: #193b68;
+  --accent-blue: #1d4ed8;
+  --accent-light-blue: #0284c7;
+  --accent-green: #15803d;
+  --accent-orange: #ea580c;
+  --accent-red: #c91818;
+  --bg-slate: #f1f5f9;
+  --border-color: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --card-bg: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-slate);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   HEADER NAVIGATION
+   ========================================================================== */
+.app-header {
+  background: linear-gradient(135deg, #091e36 0%, #133a63 100%);
+  color: #ffffff;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header-left h1 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Template Switcher Tabs */
+.template-pill-group {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 3px;
+  border-radius: 8px;
+  gap: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.template-tab {
+  background: transparent;
+  color: #cbd5e1;
+  border: none;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.template-tab:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.template-tab.active {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.4);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 15px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.18s ease-in-out;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.btn-primary {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #0369a1;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+.btn-accent {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.btn-accent:hover {
+  background: #15803d;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+.full-width {
+  width: 100%;
+  justify-content: center;
+  padding: 11px;
+}
+
+/* ==========================================================================
+   WORKSPACE MAIN LAYOUT
+   ========================================================================== */
+.main-content {
+  display: grid;
+  grid-template-columns: 430px 1fr;
+  height: calc(100vh - 58px);
+  overflow: hidden;
+}
+
+/* Left Editor Panel */
+.editor-panel {
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  overflow-y: auto;
+  height: 100%;
+  padding: 20px;
+}
+
+.panel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-header h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-navy);
+}
+
+.panel-header .subtext {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Form Styles */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.label-with-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge-auto {
+  font-size: 0.7rem;
+  background: #ecfdf5;
+  color: #059669;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: #0f172a;
+  background-color: #f8fafc;
+  transition: all 0.15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #0284c7;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.currency-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 10px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.currency-input input {
+  padding-left: 26px;
+}
+
+.input-with-action {
+  display: flex;
+  gap: 6px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Accordion sections */
+.accordion-section {
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  background: #fafafa;
+}
+
+.accordion-section summary {
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  list-style: none;
+}
+
+.accordion-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-body {
+  padding: 14px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Toggle Switch Control */
+.toggle-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+}
+
+.toggle-control input {
+  display: none;
+}
+
+.toggle-switch {
+  width: 36px;
+  height: 20px;
+  background-color: #cbd5e1;
+  border-radius: 20px;
+  position: relative;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.toggle-control input:checked + .toggle-switch {
+  background-color: #0284c7;
+}
+
+.toggle-control input:checked + .toggle-switch::after {
+  transform: translateX(16px);
+}
+
+/* ==========================================================================
+   RIGHT PANEL: LIVE PREVIEW & WORKSPACE
+   ========================================================================== */
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: #525659;
+  height: 100%;
+  overflow: hidden;
+}
+
+.preview-toolbar {
+  background: #323639;
+  color: #f1f5f9;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.preview-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+.paper-size-badge {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-left: 10px;
+  color: #cbd5e1;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+}
+
+.zoom-controls .btn-icon {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+  width: 28px;
+  height: 28px;
+}
+
+.zoom-controls .btn-icon:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.paper-viewport {
+  flex: 1;
+  overflow: auto;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ==========================================================================
+   THE EXACT RECEIPT PAPER REPLICA (A4 Landscape aspect ~ 1000px x 680px)
+   ========================================================================== */
+.receipt-paper {
+  width: 1020px;
+  min-width: 1020px;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  padding: 14px;
+  transform-origin: top center;
+  transition: transform 0.15s ease-out;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Outer Border Frame */
+.receipt-inner-frame {
+  border: 4.5px solid #143564;
+  border-radius: 14px;
+  padding: 18px 24px 20px 24px;
+  position: relative;
+  background-color: #ffffff;
+}
+
+/* ==========================================================================
+   RECEIPT HEADER
+   ========================================================================== */
+.receipt-header {
+  display: grid;
+  grid-template-columns: 125px 1fr 265px;
+  gap: 12px;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #153b6a;
+}
+
+.header-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ssf-logo-svg svg {
+  display: block;
+}
+
+/* Center Details */
+.header-main-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.foundation-title {
+  font-family: 'Inter', 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1.82rem;
+  color: #10325d;
+  letter-spacing: 0.6px;
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.foundation-motto-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 5px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.02rem;
+  letter-spacing: 1px;
+}
+
+.motto-green { color: #16a34a; }
+.motto-blue { color: #0284c7; }
+.motto-orange { color: #ea580c; }
+.motto-divider { color: #0f172a; font-weight: 400; opacity: 0.6; }
+
+/* Ribbon Banner */
+.banner-ribbon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin: 7px 0 10px 0;
+}
+
+.ribbon-body {
+  background: #0f2c52;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 1.8px;
+  padding: 4px 28px;
+  position: relative;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+.ribbon-tail {
+  width: 0;
+  height: 0;
+  border-top: 13px solid #0f2c52;
+  border-bottom: 13px solid #0f2c52;
+  position: absolute;
+  top: 0;
+}
+
+.ribbon-tail.left {
+  left: -14px;
+  border-left: 14px solid transparent;
+}
+
+.ribbon-tail.right {
+  right: -14px;
+  border-right: 14px solid transparent;
+}
+
+/* Contact Details */
+.header-contact-details {
+  font-size: 0.77rem;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 490px;
+}
+
+.contact-line.office-address {
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+  line-height: 1.35;
+}
+
+.icon-circle {
+  color: #10325d;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.official-logo-img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  display: block;
+}
+
+.contact-badges-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  font-size: 0.74rem;
+}
+
+.whatsapp-pill { color: #166534; }
+.email-pill { color: #1e293b; }
+.website-pill { color: #0369a1; }
+.insta-pill { color: #9d174d; }
+
+/* Credentials Table */
+.header-credentials-box {
+  border-left: 1.5px solid #cbd5e1;
+  padding-left: 14px;
+}
+
+.credentials-table {
+  width: 100%;
+  font-size: 0.78rem;
+  border-collapse: collapse;
+}
+
+.credentials-table tr {
+  line-height: 1.6;
+}
+
+.cred-label {
+  font-weight: 800;
+  color: #0f2848;
+  white-space: nowrap;
+  width: 60px;
+}
+
+.cred-sep {
+  font-weight: 800;
+  color: #0f2848;
+  padding: 0 4px;
+}
+
+.cred-val {
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   DOCUMENT TITLE & RECEIPT NO. BAND
+   ========================================================================== */
+.receipt-title-band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 14px 0 10px 0;
+}
+
+.flourish {
+  display: flex;
+  align-items: center;
+}
+
+.flourish svg {
+  display: block;
+}
+
+.receipt-main-heading {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-weight: 800;
+  font-size: 1.48rem;
+  color: #103463;
+  letter-spacing: 2px;
+  margin: 0 14px;
+  text-transform: uppercase;
+}
+
+.receipt-no-tag-container {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.receipt-no-label {
+  background: #0f2c52;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.receipt-no-value {
+  color: #c91818;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.8px;
+}
+
+/* ==========================================================================
+   RECEIPT BODY CONTENT
+   ========================================================================== */
+.receipt-body {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 25px;
+  margin-top: 10px;
+  align-items: start;
+}
+
+/* Details Table */
+.receipt-details-col {
+  padding-top: 6px;
+}
+
+.receipt-fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.96rem;
+}
+
+.receipt-fields-table tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.receipt-fields-table tr:last-child {
+  border-bottom: none;
+}
+
+.field-title {
+  width: 165px;
+  font-weight: 700;
+  color: #0f284a;
+  padding: 11px 0;
+  white-space: nowrap;
+}
+
+.field-colon {
+  width: 24px;
+  font-weight: 800;
+  color: #0f284a;
+  padding: 11px 0;
+  text-align: left;
+}
+
+.field-content {
+  padding: 11px 0;
+  color: #1e293b;
+  line-height: 1.45;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-medium {
+  font-weight: 600;
+}
+
+.donor-name-highlight {
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.amount-highlight {
+  font-size: 1.15rem;
+  color: #0f284a;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.transaction-segment {
+  margin-left: 28px;
+}
+
+.sub-label {
+  font-weight: 700;
+  color: #0f284a;
+}
+
+.sub-colon {
+  font-weight: 800;
+  padding: 0 4px;
+  color: #0f284a;
+}
+
+.align-top {
+  vertical-align: top;
+  padding-top: 14px;
+}
+
+.purpose-text {
+  font-size: 0.92rem;
+  color: #1e293b;
+  line-height: 1.5;
+  padding-top: 14px;
+}
+
+/* Scan & Pay / Donate QR Box */
+.receipt-qr-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 8px;
+  max-width: 480px;
+}
+
+.qr-image-frame {
+  width: 80px;
+  height: 80px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-scan-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.qr-details-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.qr-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qr-title {
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #0f284a;
+}
+
+.qr-badge-live {
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #bbf7d0;
+}
+
+.qr-upi-badge {
+  font-size: 0.73rem;
+  color: #0284c7;
+  font-weight: 600;
+  background: #f0f9ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: fit-content;
+  margin: 2px 0;
+}
+
+.qr-supported-apps {
+  font-size: 0.67rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.qr-supported-apps span {
+  color: #334155;
+}
+
+/* ==========================================================================
+   RIGHT SIDEBAR: THANK YOU CARD & SIGNATORY
+   ========================================================================== */
+.receipt-sidebar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Thank You Card */
+.thank-you-card {
+  border: 1.8px solid #86efac;
+  background: #fdfefe;
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.08);
+}
+
+.card-ornament {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: #22c55e;
+  border-style: solid;
+}
+
+.card-ornament.top-left {
+  top: 4px;
+  left: 4px;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: 6px;
+}
+
+.card-ornament.top-right {
+  top: 4px;
+  right: 4px;
+  border-width: 2px 2px 0 0;
+  border-top-right-radius: 6px;
+}
+
+.card-ornament.bottom-left {
+  bottom: 4px;
+  left: 4px;
+  border-width: 0 0 2px 2px;
+  border-bottom-left-radius: 6px;
+}
+
+.card-ornament.bottom-right {
+  bottom: 4px;
+  right: 4px;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: 6px;
+}
+
+.heart-hands-icon {
+  margin-bottom: 2px;
+}
+
+.thank-you-script {
+  font-family: 'Great Vibes', 'Alex Brush', cursive;
+  font-size: 2.15rem;
+  color: #1e293b;
+  font-weight: 500;
+  line-height: 1;
+  margin: 2px 0 8px 0;
+}
+
+.thank-you-para {
+  font-size: 0.76rem;
+  color: #334155;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+
+.thank-you-tagline {
+  font-size: 0.78rem;
+  font-style: italic;
+  font-weight: 700;
+  color: #15803d;
+}
+
+/* Signatory & Stamp Area */
+.signatory-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  position: relative;
+  padding-top: 10px;
+}
+
+.official-stamp-wrapper {
+  position: absolute;
+  left: 8px;
+  bottom: 10px;
+  pointer-events: none;
+  z-index: 5;
+  transform: rotate(-10deg);
+  opacity: 0.88;
+}
+
+.signature-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 200px;
+  z-index: 6;
+}
+
+.for-foundation-text {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0f284a;
+  margin-bottom: 2px;
+}
+
+.signature-graphic {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signature-line {
+  width: 100%;
+  height: 1.5px;
+  background-color: #0f284a;
+  margin-top: 3px;
+}
+
+.signatory-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   SLIDE-OVER HISTORY DRAWER
+   ========================================================================== */
+.history-drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+.history-drawer-backdrop.active {
+  display: block;
+}
+
+.history-drawer {
+  position: fixed;
+  top: 0;
+  right: -380px;
+  width: 360px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.25s ease-in-out;
+}
+
+.history-drawer.active {
+  right: 0;
+}
+
+.drawer-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-header h3 {
+  font-size: 1rem;
+  color: var(--primary-navy);
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.history-item:hover {
+  border-color: #0284c7;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.history-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-receipt-no {
+  font-weight: 700;
+  color: #c91818;
+  font-size: 0.88rem;
+}
+
+.history-date {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.history-donor {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+.history-item-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.history-amount {
+  font-weight: 800;
+  color: #15803d;
+  font-size: 0.98rem;
+}
+
+.history-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.drawer-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.empty-history {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 40px 10px;
+}
+
+/* Toast */
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.25s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ==========================================================================
+   TEMPLATE 1: 80G TAX BENEFIT CERTIFICATE (A4 PORTRAIT)
+   Matching Soul Charitable Trust reference PDF
+   ========================================================================== */
+.certificate-paper {
+  width: 794px;
+  min-width: 794px;
+  max-width: 794px;
+  height: 1080px;
+  max-height: 1085px;
+  min-height: 0;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  padding: 24px 34px 18px 34px;
+  transform-origin: top center;
+  transition: transform 0.15s ease-out;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.cert-inner-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Watermark */
+.cert-watermark {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 330px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-watermark img {
+  width: 100%;
+  height: auto;
+  filter: grayscale(100%);
+}
+
+/* Header */
+.cert-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.cert-logo-box {
+  width: 78px;
+  height: 78px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cert-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cert-trust-name {
+  font-family: 'Inter', 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1.72rem;
+  color: #0284c7;
+  letter-spacing: 0.5px;
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.cert-reg-sub {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #334155;
+  margin-top: 1px;
+}
+
+.cert-motto {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1px;
+  letter-spacing: 0.2px;
+}
+
+/* Cyan / Blue Band */
+.cert-contact-band {
+  background: #e0f2fe;
+  border-top: 1.5px solid #bae6fd;
+  border-bottom: 1.5px solid #bae6fd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0369a1;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.cert-band-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Thank You & Certificate Banner */
+.cert-title-section {
+  text-align: center;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.cert-thank-you-msg {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #0284c7;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+
+.cert-badge-box {
+  display: inline-block;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 3px 18px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Fields Grid */
+.cert-fields-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+  font-size: 0.84rem;
+}
+
+.cert-line-row {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  line-height: 1.4;
+}
+
+.row-three-col {
+  justify-content: space-between;
+}
+
+.row-two-col {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.cert-field-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.cert-label {
+  color: #334155;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.cert-val {
+  color: #0f172a;
+}
+
+.underline-span {
+  border-bottom: 1.2px solid #475569;
+  padding-bottom: 1px;
+  min-height: 20px;
+  display: inline-block;
+}
+
+.underline-short {
+  border-bottom: 1.2px solid #475569;
+  min-width: 60px;
+  display: inline-block;
+}
+
+.fixed-pan {
+  min-width: 140px;
+}
+
+.fixed-txn {
+  min-width: 140px;
+}
+
+.inline-bank {
+  min-width: 110px;
+}
+
+.inline-amt {
+  min-width: 110px;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+/* Compliance & Bank Details Row */
+.cert-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 6px 0 8px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.cert-compliance-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.78rem;
+  flex: 1;
+}
+
+.comp-line {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.comp-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.comp-icon svg {
+  display: block;
+}
+
+.comp-label {
+  color: #1e293b;
+  font-weight: 800;
+  min-width: 110px;
+  font-size: 0.76rem;
+  letter-spacing: 0.2px;
+}
+
+.comp-val {
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+/* Foundation Bank Transfer Card */
+.cert-bank-details-card {
+  flex: 1.22;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.cert-bank-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #0369a1;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.bank-details-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.74rem;
+}
+
+.bank-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.b-lbl {
+  color: #475569;
+  font-weight: 700;
+  min-width: 80px;
+  font-size: 0.72rem;
+}
+
+.b-val {
+  color: #0f172a;
+  font-size: 0.74rem;
+}
+
+.highlight-acc {
+  color: #0284c7;
+  font-size: 0.8rem;
+  letter-spacing: 0.4px;
+}
+
+/* Dashed Divider */
+.cert-dashed-line {
+  border-top: 1.5px dashed #334155;
+  margin: 8px 0 10px 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* Signatory & Scan QR */
+.cert-sign-qr-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.cert-signatory-side {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+}
+
+.for-trust-text {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+}
+
+.for-trust-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 1px;
+}
+
+.cert-stamp-sign-wrap {
+  position: relative;
+  height: 74px;
+  width: 190px;
+  display: flex;
+  align-items: center;
+}
+
+.cert-stamp-img {
+  position: absolute;
+  left: 56px;
+  top: -6px;
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  transform: rotate(-6deg);
+  opacity: 0.95;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cert-sign-img {
+  position: relative;
+  z-index: 2;
+  width: 110px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.cert-signatory-label {
+  border-top: 1.5px solid #0f172a;
+  padding-top: 3px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0f172a;
+  width: 175px;
+}
+
+/* QR Side */
+.cert-qr-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scan-code-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0f3764;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.scan-code-box {
+  width: 110px;
+  height: 110px;
+  background: #ffffff;
+  border: 1.5px solid #94a3b8;
+  padding: 3px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.cert-qr-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Footer */
+.cert-footer {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.72rem;
+  color: #334155;
+  position: relative;
+  z-index: 2;
+  line-height: 1.35;
+}
+
+.footer-reach-title {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 0.78rem;
+}
+
+.footer-pledge {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 0.73rem;
+  letter-spacing: 0.2px;
+}
+
+.footer-reg-act,
+.footer-office-address,
+.footer-contact-phones {
+  font-weight: 500;
+}
+
+.footer-offices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 8px;
+  align-items: stretch;
+  margin: 3px 0 2px 0;
+  padding: 4px 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.footer-office-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-office-divider {
+  background: #cbd5e1;
+  width: 1px;
+  height: auto;
+}
+
+.footer-office-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.3px;
+}
+
+.footer-office-text {
+  font-size: 0.67rem;
+  line-height: 1.25;
+  color: #334155;
+  font-weight: 500;
+}
+
+.footer-contact-phones {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Real Stamp & Signature on Classic Landscape */
+.real-stamp-img {
+  width: 95px;
+  height: 95px;
+  object-fit: contain;
+  transform: rotate(-6deg);
+  opacity: 0.92;
+  display: block;
+}
+
+.real-sign-img {
+  width: 125px;
+  height: 52px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ==========================================================================
+   PRINT STYLES: CLEAN, CRISP, 100% VECTOR PRECISION (EXACT 1 PAGE FIT)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0 !important;
+  }
+
+  html, body {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print,
+  .app-header,
+  .editor-panel,
+  .preview-toolbar,
+  .history-drawer,
+  .history-drawer-backdrop,
+  .toast-notification {
+    display: none !important;
+  }
+
+  .main-content {
+    display: block !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .preview-panel {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .paper-viewport {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    height: 100% !important;
+  }
+
+  .certificate-paper {
+    width: 100% !important;
+    max-width: 210mm !important;
+    min-width: 0 !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    min-height: 0 !important;
+    box-shadow: none !important;
+    padding: 8mm 14mm 6mm 14mm !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    break-inside: avoid !important;
+    break-after: avoid !important;
+    overflow: hidden !important;
+  }
+
+  .cert-inner-container {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  .receipt-paper {
+    width: 100% !important;
+    min-width: 100% !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  .receipt-inner-frame {
+    border: 3.5pt solid #143564 !important;
+    padding: 14pt 18pt !important;
+    border-radius: 10pt !important;
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVENESS (Small screens)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .editor-panel {
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .preview-panel {
+    height: auto;
+    min-height: 500px;
+  }
+
+  .paper-viewport {
+    padding: 15px;
+  }
+}

@@ -1889,10 +1889,19 @@ textarea {
 
 /* ==========================================================================
    MOBILE & TABLET RESPONSIVENESS
-   Ensures seamless phone & tablet display while keeping desktop layout unchanged
    ========================================================================== */
 
-/* Tablet & Mobile Breakpoint (<= 1024px) */
+/* Always hide mobile jump button on desktop */
+.mobile-quick-nav {
+  display: none;
+}
+
+/* Prevent horizontal scroll on all screens */
+body, .app-container {
+  overflow-x: hidden;
+}
+
+/* Tablet & Mobile (<= 1024px) */
 @media (max-width: 1024px) {
   .main-content {
     grid-template-columns: 1fr;
@@ -1919,7 +1928,7 @@ textarea {
     position: sticky;
     top: 0;
     z-index: 30;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
 
   .paper-viewport {
@@ -1933,7 +1942,7 @@ textarea {
     width: 100%;
   }
 
-  /* Mobile floating quick navigation button */
+  /* Show mobile jump button on tablet/phone */
   .mobile-quick-nav {
     display: block;
     position: fixed;
@@ -1948,12 +1957,12 @@ textarea {
     gap: 8px;
     background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255,255,255,0.25);
     border-radius: 30px;
     padding: 10px 18px;
     font-size: 0.85rem;
     font-weight: 700;
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+    box-shadow: 0 6px 20px rgba(2,132,199,0.45);
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -1963,84 +1972,65 @@ textarea {
   }
 }
 
-/* Tablet Portrait & Large Phones (<= 768px) */
+/* Large Phones & Small Tablets (<= 768px) */
 @media (max-width: 768px) {
   .app-header {
     padding: 10px 16px;
     flex-wrap: wrap;
-    gap: 10px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    gap: 8px;
   }
 
   .header-left {
-    gap: 10px;
     flex: 1 1 auto;
-    min-width: 200px;
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .header-left h1 {
-    font-size: 1rem;
-  }
-
-  .header-actions {
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
   }
 
   .header-actions .btn {
-    padding: 7px 11px;
-    font-size: 0.82rem;
-    gap: 5px;
+    padding: 7px 10px;
+    font-size: 0.8rem;
+    gap: 4px;
   }
 
   .editor-panel {
-    padding: 18px 14px;
+    padding: 16px 14px;
   }
 
   .preview-toolbar {
     padding: 8px 14px;
   }
 
-  .preview-indicator {
-    font-size: 0.78rem;
-  }
-
-  .paper-size-badge {
-    font-size: 0.72rem;
-    margin-left: 6px;
-  }
-
-  .zoom-controls {
-    gap: 4px;
-    font-size: 0.78rem;
+  .paper-viewport {
+    padding: 16px 8px;
   }
 
   .zoom-controls .btn-icon {
     width: 26px;
     height: 26px;
-    font-size: 0.8rem;
-  }
-
-  .paper-viewport {
-    padding: 18px 8px;
   }
 }
 
-/* Mobile Phones (<= 640px) */
+/* Phones (<= 640px) */
 @media (max-width: 640px) {
   .form-row {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 0;
   }
 
   .form-group {
     margin-bottom: 10px;
   }
 
-  /* Prevent auto-zooming on input focus in iOS Safari */
+  /* iOS Safari: prevent auto-zoom on input focus (must be >= 16px) */
   input[type="text"],
   input[type="email"],
   input[type="number"],
@@ -2048,57 +2038,38 @@ textarea {
   select,
   textarea {
     font-size: 16px;
-    padding: 9px 12px;
-  }
-
-  .currency-symbol {
-    font-size: 0.95rem;
   }
 
   .accordion-section summary {
-    padding: 10px 12px;
-    font-size: 0.86rem;
-  }
-
-  .accordion-body {
-    padding: 12px 10px;
+    font-size: 0.85rem;
   }
 
   .toggle-control {
     font-size: 0.82rem;
-    padding: 3px 0;
   }
 }
 
-/* Small Mobile Phones (<= 520px) */
-@media (max-width: 520px) {
+/* Small Phones (<= 480px) */
+@media (max-width: 480px) {
   .app-header {
-    padding: 8px 12px;
+    padding: 8px 10px;
+    flex-direction: column;
+    align-items: stretch;
     gap: 8px;
   }
 
   .header-left {
     width: 100%;
     justify-content: flex-start;
-    gap: 8px;
   }
 
   .header-left h1 {
-    font-size: 0.9rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 0.85rem;
+    max-width: 100%;
   }
 
-  .app-badge {
-    padding: 3px 6px;
-    font-size: 0.72rem;
-    gap: 4px;
-  }
-
-  .app-badge svg {
-    width: 15px;
-    height: 15px;
+  .app-badge span {
+    display: none; /* hide "SSF Generator" text, keep icon only */
   }
 
   .header-actions {
@@ -2111,36 +2082,31 @@ textarea {
   .header-actions .btn {
     width: 100%;
     justify-content: center;
-    padding: 7px 4px;
-    font-size: 0.75rem;
-    gap: 4px;
+    padding: 8px 4px;
+    font-size: 0.72rem;
+    gap: 3px;
   }
 
   .header-actions .btn svg {
     width: 13px;
     height: 13px;
+    flex-shrink: 0;
   }
 
   .editor-panel {
-    padding: 14px 10px;
+    padding: 12px 10px;
   }
 
   .panel-header h2 {
-    font-size: 1.05rem;
-  }
-
-  .panel-header .subtext {
-    font-size: 0.78rem;
+    font-size: 1rem;
   }
 
   .preview-toolbar {
     padding: 6px 10px;
-    flex-direction: row;
-    justify-content: space-between;
   }
 
   .paper-viewport {
-    padding: 14px 4px;
+    padding: 10px 4px;
   }
 
   .history-drawer {
@@ -2153,20 +2119,21 @@ textarea {
   }
 
   .toast-notification {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    max-width: calc(100% - 24px);
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: calc(100% - 20px);
     text-align: center;
   }
 
   .mobile-quick-nav {
-    bottom: 16px;
-    right: 16px;
+    bottom: 14px;
+    right: 14px;
   }
 
   .mobile-jump-btn {
     padding: 8px 14px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 }
+

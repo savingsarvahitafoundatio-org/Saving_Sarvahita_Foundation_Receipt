@@ -38,12 +38,18 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -492,11 +498,38 @@ textarea {
 
 .paper-viewport {
   flex: 1;
-  overflow: auto;
-  padding: 30px;
+  overflow-x: auto;
+  overflow-y: auto;
+  padding: 30px 20px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Container matching the exact scaled pixel dimensions of the paper */
+.paper-stage {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  flex-shrink: 0;
+  transform-origin: top left;
+}
+
+.btn-text-short {
+  display: none;
+}
+
+@media (max-width: 520px) {
+  .btn-text-full {
+    display: none;
+  }
+  .btn-text-short {
+    display: inline;
+  }
 }
 
 /* ==========================================================================
@@ -509,7 +542,7 @@ textarea {
   color: #0f172a;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   padding: 14px;
-  transform-origin: top center;
+  transform-origin: top left;
   transition: transform 0.15s ease-out;
   position: relative;
   box-sizing: border-box;
@@ -1252,7 +1285,7 @@ textarea {
   color: #0f172a;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   padding: 24px 34px 18px 34px;
-  transform-origin: top center;
+  transform-origin: top left;
   transition: transform 0.15s ease-out;
   position: relative;
   box-sizing: border-box;
@@ -1844,6 +1877,14 @@ textarea {
     height: 100% !important;
   }
 
+  .paper-stage {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    display: block !important;
+    transform: none !important;
+  }
+
   .certificate-paper {
     width: 100% !important;
     max-width: 210mm !important;
@@ -1889,19 +1930,10 @@ textarea {
 
 /* ==========================================================================
    MOBILE & TABLET RESPONSIVENESS
+   Ensures seamless phone & tablet display while keeping desktop layout unchanged
    ========================================================================== */
 
-/* Always hide mobile jump button on desktop */
-.mobile-quick-nav {
-  display: none;
-}
-
-/* Prevent horizontal scroll on all screens */
-body, .app-container {
-  overflow-x: hidden;
-}
-
-/* Tablet & Mobile (<= 1024px) */
+/* Tablet & Mobile Breakpoint (<= 1024px) */
 @media (max-width: 1024px) {
   .main-content {
     grid-template-columns: 1fr;
@@ -1928,7 +1960,7 @@ body, .app-container {
     position: sticky;
     top: 0;
     z-index: 30;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
   .paper-viewport {
@@ -1942,7 +1974,7 @@ body, .app-container {
     width: 100%;
   }
 
-  /* Show mobile jump button on tablet/phone */
+  /* Mobile floating quick navigation button */
   .mobile-quick-nav {
     display: block;
     position: fixed;
@@ -1957,12 +1989,12 @@ body, .app-container {
     gap: 8px;
     background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     color: #ffffff;
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 30px;
     padding: 10px 18px;
     font-size: 0.85rem;
     font-weight: 700;
-    box-shadow: 0 6px 20px rgba(2,132,199,0.45);
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -1972,65 +2004,84 @@ body, .app-container {
   }
 }
 
-/* Large Phones & Small Tablets (<= 768px) */
+/* Tablet Portrait & Large Phones (<= 768px) */
 @media (max-width: 768px) {
   .app-header {
     padding: 10px 16px;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
 
   .header-left {
+    gap: 10px;
     flex: 1 1 auto;
-    gap: 8px;
-    min-width: 0;
-    overflow: hidden;
+    min-width: 200px;
   }
 
   .header-left h1 {
-    font-size: 0.95rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
+    font-size: 1rem;
+  }
+
+  .header-actions {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .header-actions .btn {
-    padding: 7px 10px;
-    font-size: 0.8rem;
-    gap: 4px;
+    padding: 7px 11px;
+    font-size: 0.82rem;
+    gap: 5px;
   }
 
   .editor-panel {
-    padding: 16px 14px;
+    padding: 18px 14px;
   }
 
   .preview-toolbar {
     padding: 8px 14px;
   }
 
-  .paper-viewport {
-    padding: 16px 8px;
+  .preview-indicator {
+    font-size: 0.78rem;
+  }
+
+  .paper-size-badge {
+    font-size: 0.72rem;
+    margin-left: 6px;
+  }
+
+  .zoom-controls {
+    gap: 4px;
+    font-size: 0.78rem;
   }
 
   .zoom-controls .btn-icon {
     width: 26px;
     height: 26px;
+    font-size: 0.8rem;
+  }
+
+  .paper-viewport {
+    padding: 18px 8px;
   }
 }
 
-/* Phones (<= 640px) */
+/* Mobile Phones (<= 640px) */
 @media (max-width: 640px) {
   .form-row {
     grid-template-columns: 1fr;
-    gap: 0;
+    gap: 10px;
   }
 
   .form-group {
     margin-bottom: 10px;
   }
 
-  /* iOS Safari: prevent auto-zoom on input focus (must be >= 16px) */
+  /* Prevent auto-zooming on input focus in iOS Safari */
   input[type="text"],
   input[type="email"],
   input[type="number"],
@@ -2038,53 +2089,86 @@ body, .app-container {
   select,
   textarea {
     font-size: 16px;
+    padding: 9px 12px;
+  }
+
+  .currency-symbol {
+    font-size: 0.95rem;
   }
 
   .accordion-section summary {
-    font-size: 0.85rem;
+    padding: 10px 12px;
+    font-size: 0.86rem;
+  }
+
+  .accordion-body {
+    padding: 12px 10px;
   }
 
   .toggle-control {
     font-size: 0.82rem;
+    padding: 3px 0;
   }
 }
 
-/* Small Phones (<= 480px) */
-@media (max-width: 480px) {
+/* Small Mobile Phones (<= 520px) */
+@media (max-width: 520px) {
   .app-header {
-    padding: 8px 10px;
+    padding: 8px 12px;
+    gap: 8px;
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
   }
 
   .header-left {
     width: 100%;
+    display: flex;
+    align-items: center;
     justify-content: flex-start;
+    gap: 8px;
+    min-width: 0;
   }
 
   .header-left h1 {
-    font-size: 0.85rem;
-    max-width: 100%;
+    font-size: 0.84rem;
+    line-height: 1.25;
+    font-weight: 700;
+    white-space: normal;
+    word-break: break-word;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
   }
 
-  .app-badge span {
-    display: none; /* hide "SSF Generator" text, keep icon only */
+  .app-badge {
+    padding: 3px 6px;
+    font-size: 0.7rem;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .app-badge svg {
+    width: 14px;
+    height: 14px;
   }
 
   .header-actions {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
   }
 
   .header-actions .btn {
     width: 100%;
     justify-content: center;
-    padding: 8px 4px;
-    font-size: 0.72rem;
+    padding: 7px 3px;
+    font-size: 0.74rem;
+    font-weight: 700;
     gap: 3px;
+    min-width: 0;
+    white-space: nowrap;
+    border-radius: 6px;
   }
 
   .header-actions .btn svg {
@@ -2094,19 +2178,25 @@ body, .app-container {
   }
 
   .editor-panel {
-    padding: 12px 10px;
+    padding: 14px 10px;
   }
 
   .panel-header h2 {
-    font-size: 1rem;
+    font-size: 1.05rem;
+  }
+
+  .panel-header .subtext {
+    font-size: 0.78rem;
   }
 
   .preview-toolbar {
     padding: 6px 10px;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .paper-viewport {
-    padding: 10px 4px;
+    padding: 14px 4px;
   }
 
   .history-drawer {
@@ -2119,21 +2209,20 @@ body, .app-container {
   }
 
   .toast-notification {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    max-width: calc(100% - 20px);
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100% - 24px);
     text-align: center;
   }
 
   .mobile-quick-nav {
-    bottom: 14px;
-    right: 14px;
+    bottom: 16px;
+    right: 16px;
   }
 
   .mobile-jump-btn {
     padding: 8px 14px;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
   }
 }
-

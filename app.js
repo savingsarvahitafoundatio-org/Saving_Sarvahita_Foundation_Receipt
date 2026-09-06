@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const historyBackdrop = document.getElementById('historyBackdrop');
   const historyList = document.getElementById('historyList');
   const historyCount = document.getElementById('historyCount');
+  const historyCountShort = document.getElementById('historyCountShort');
   const toast = document.getElementById('toast');
 
   let currentZoom = 1;
@@ -503,12 +504,18 @@ document.addEventListener('DOMContentLoaded', () => {
   btnDownloadImage.addEventListener('click', () => {
     showToast('Generating high-resolution PNG...');
     const targetElement = activeTemplate === 'portrait' ? certificate80GCard : receiptCard;
+    const paperStage = document.getElementById('paperStage');
     if (!targetElement) return;
 
     const originalTransform = targetElement.style.transform;
-    const originalMarginBottom = targetElement.style.marginBottom;
+    const originalStageWidth = paperStage ? paperStage.style.width : '';
+    const originalStageHeight = paperStage ? paperStage.style.height : '';
+
     targetElement.style.transform = 'none';
-    targetElement.style.marginBottom = '0px';
+    if (paperStage) {
+      paperStage.style.width = activeTemplate === 'portrait' ? '794px' : '1020px';
+      paperStage.style.height = activeTemplate === 'portrait' ? '1080px' : '680px';
+    }
 
     if (window.html2canvas) {
       window.html2canvas(targetElement, {
@@ -517,7 +524,10 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundColor: '#ffffff'
       }).then(canvas => {
         targetElement.style.transform = originalTransform;
-        targetElement.style.marginBottom = originalMarginBottom;
+        if (paperStage) {
+          paperStage.style.width = originalStageWidth;
+          paperStage.style.height = originalStageHeight;
+        }
         const link = document.createElement('a');
         const fileName = (receiptNoInput.value || 'receipt').replace(/[^a-zA-Z0-9_-]/g, '_');
         link.download = `Donation_Receipt_${fileName}.png`;
@@ -526,7 +536,10 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('PNG downloaded successfully!');
       }).catch(err => {
         targetElement.style.transform = originalTransform;
-        targetElement.style.marginBottom = originalMarginBottom;
+        if (paperStage) {
+          paperStage.style.width = originalStageWidth;
+          paperStage.style.height = originalStageHeight;
+        }
         console.error('Download error:', err);
         showToast('Error generating image. You can use "Print / PDF" instead.');
       });
@@ -539,18 +552,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyZoom(zoom) {
     currentZoom = Math.min(Math.max(zoom, 0.2), 1.6);
     const targetElement = activeTemplate === 'portrait' ? certificate80GCard : receiptCard;
+    const paperStage = document.getElementById('paperStage');
     if (!targetElement) return;
 
     targetElement.style.transform = `scale(${currentZoom})`;
-    targetElement.style.transformOrigin = 'top center';
+    targetElement.style.transformOrigin = 'top left';
 
-    // Collapses unscaled vertical blank space when scaled down on mobile/tablet
+    const unscaledWidth = activeTemplate === 'portrait' ? 794 : 1020;
     const unscaledHeight = activeTemplate === 'portrait' ? 1080 : 680;
-    if (currentZoom < 1) {
-      const reducedPx = Math.round(unscaledHeight * (1 - currentZoom));
-      targetElement.style.marginBottom = `-${reducedPx}px`;
-    } else {
-      targetElement.style.marginBottom = '0px';
+
+    if (paperStage) {
+      paperStage.style.width = `${Math.round(unscaledWidth * currentZoom)}px`;
+      paperStage.style.height = `${Math.round(unscaledHeight * currentZoom)}px`;
     }
 
     if (zoomLevelDisplay) {
@@ -560,11 +573,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function autoFitToScreen() {
     if (!paperViewport) return;
-    const padding = window.innerWidth <= 576 ? 16 : (window.innerWidth <= 768 ? 24 : 40);
-    const viewportWidth = paperViewport.clientWidth - padding;
+
+    // Get true available viewport width on mobile/tablet vs desktop
+    const windowWidth = Math.min(
+      window.innerWidth || document.documentElement.clientWidth,
+      document.documentElement.clientWidth || window.innerWidth
+    );
+
+    let availableWidth;
+    if (windowWidth > 1024) {
+      availableWidth = paperViewport.clientWidth - 48;
+    } else {
+      // On mobile and tablet, available width is full screen width minus small padding
+      const padding = windowWidth <= 520 ? 16 : 28;
+      availableWidth = windowWidth - padding;
+    }
+
     const targetWidth = activeTemplate === 'portrait' ? 794 : 1020;
-    if (viewportWidth > 0 && viewportWidth < targetWidth) {
-      const fitZoom = (viewportWidth / targetWidth);
+    if (availableWidth > 0 && availableWidth < targetWidth) {
+      const fitZoom = (availableWidth / targetWidth);
       applyZoom(fitZoom);
     } else {
       applyZoom(1);
@@ -600,7 +627,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderHistory() {
     const list = getSavedReceipts();
-    historyCount.textContent = list.length;
+    if (historyCount) historyCount.textContent = list.length;
+    if (historyCountShort) historyCountShort.textContent = list.length;
 
     if (list.length === 0) {
       historyList.innerHTML = '<div class="empty-history">No receipts saved yet. Click "Save Receipt" to save your work.</div>';

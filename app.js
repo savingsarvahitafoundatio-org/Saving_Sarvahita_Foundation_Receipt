@@ -237,15 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnLoadSample = document.getElementById('btnLoadSample');
   const btnNewReceipt = document.getElementById('btnNewReceipt');
   const btnNextNumber = document.getElementById('btnNextNumber');
-  const btnSaveToHistory = document.getElementById('btnSaveToHistory');
-  const btnToggleHistory = document.getElementById('btnToggleHistory');
-  const btnCloseHistory = document.getElementById('btnCloseHistory');
-  const btnClearAllHistory = document.getElementById('btnClearAllHistory');
-  const historyDrawer = document.getElementById('historyDrawer');
-  const historyBackdrop = document.getElementById('historyBackdrop');
-  const historyList = document.getElementById('historyList');
-  const historyCount = document.getElementById('historyCount');
-  const historyCountShort = document.getElementById('historyCountShort');
   const toast = document.getElementById('toast');
 
   let currentZoom = 1;
@@ -609,129 +600,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(autoFitToScreen, 200);
   });
 
-  // --- LocalStorage History ---
-  const STORAGE_KEY = 'ssf_receipts_history';
-
-  function getSavedReceipts() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveReceiptsList(list) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    renderHistory();
-  }
-
-  function renderHistory() {
-    const list = getSavedReceipts();
-    if (historyCount) historyCount.textContent = list.length;
-    if (historyCountShort) historyCountShort.textContent = list.length;
-
-    if (list.length === 0) {
-      historyList.innerHTML = '<div class="empty-history">No receipts saved yet. Click "Save Receipt" to save your work.</div>';
-      return;
-    }
-
-    historyList.innerHTML = list.map((item, index) => `
-      <div class="history-item">
-        <div class="history-item-header">
-          <span class="history-receipt-no">${item.receiptNo || 'Receipt'}</span>
-          <span class="history-date">${item.receiptDate || ''}</span>
-        </div>
-        <div class="history-donor">${item.donorName || 'Anonymous'}</div>
-        <div class="history-item-bottom">
-          <span class="history-amount">₹${item.amount || '0'}</span>
-          <div class="history-actions">
-            <button class="btn btn-secondary btn-sm" onclick="loadReceiptFromHistory(${index})">Load</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteReceiptFromHistory(${index})">Delete</button>
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  window.loadReceiptFromHistory = function(index) {
-    const list = getSavedReceipts();
-    const item = list[index];
-    if (!item) return;
-
-    if (item.template) switchTemplate(item.template);
-    receiptTypeInput.value = item.receiptType || 'DONATION RECEIPT';
-    receiptNoInput.value = item.receiptNo || '';
-    receiptDateInput.value = item.receiptDateRaw || item.receiptDate || '';
-    if (formNoInput) formNoInput.value = item.formNo || '';
-    if (donationForInput) donationForInput.value = item.donationFor || '';
-    donorNameInput.value = item.donorName || '';
-    if (donorPanInput) donorPanInput.value = item.donorPan || '';
-    paymentModeInput.value = item.paymentMode || '';
-    transactionIdInput.value = item.transactionId || '';
-    if (bankNameInput) bankNameInput.value = item.bankName || '';
-    amountInput.value = item.amount || '';
-    amountInWordsInput.value = item.amountInWords || '';
-
-    updatePreview();
-    closeHistory();
-    showToast(`Loaded ${item.receiptNo || 'Receipt'}`);
-  };
-
-  window.deleteReceiptFromHistory = function(index) {
-    const list = getSavedReceipts();
-    list.splice(index, 1);
-    saveReceiptsList(list);
-    showToast('Receipt deleted from history');
-  };
-
-  btnSaveToHistory.addEventListener('click', () => {
-    const receiptData = {
-      id: Date.now(),
-      template: activeTemplate,
-      receiptType: receiptTypeInput.value,
-      receiptNo: receiptNoInput.value,
-      receiptDate: formatDateDDMMYYYY(receiptDateInput.value, '-'),
-      receiptDateRaw: receiptDateInput.value,
-      formNo: formNoInput ? formNoInput.value : '',
-      donationFor: donationForInput ? donationForInput.value : '',
-      donorName: donorNameInput.value,
-      donorPan: donorPanInput ? donorPanInput.value : '',
-      paymentMode: paymentModeInput.value,
-      transactionId: transactionIdInput.value,
-      bankName: bankNameInput ? bankNameInput.value : '',
-      amount: amountInput.value,
-      amountInWords: amountInWordsInput.value,
-      timestamp: new Date().toISOString()
-    };
-
-    const list = getSavedReceipts();
-    list.unshift(receiptData);
-    saveReceiptsList(list);
-    showToast(`Receipt ${receiptData.receiptNo} saved!`);
-  });
-
-  btnClearAllHistory.addEventListener('click', () => {
-    if (confirm('Are you sure you want to delete all saved receipts?')) {
-      saveReceiptsList([]);
-      showToast('All history cleared');
-    }
-  });
-
-  function openHistory() {
-    renderHistory();
-    historyDrawer.classList.add('active');
-    historyBackdrop.classList.add('active');
-  }
-
-  function closeHistory() {
-    historyDrawer.classList.remove('active');
-    historyBackdrop.classList.remove('active');
-  }
-
-  btnToggleHistory.addEventListener('click', openHistory);
-  btnCloseHistory.addEventListener('click', closeHistory);
-  historyBackdrop.addEventListener('click', closeHistory);
-
   // Toast Helper
   let toastTimeout;
   function showToast(message) {
@@ -783,7 +651,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize
   switchTemplate('portrait');
   updatePreview();
-  renderHistory();
   autoFitToScreen();
   setTimeout(autoFitToScreen, 150);
 });

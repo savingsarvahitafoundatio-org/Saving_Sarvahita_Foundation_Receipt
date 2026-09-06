@@ -375,15 +375,16 @@ textarea {
   border-top: 1px solid #e2e8f0;
 }
 
-/* Toggle Switch Control */
+/* Apple iOS Toggle Switch Control */
 .toggle-control {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
+  gap: 10px;
+  font-size: 0.85rem;
   font-weight: 500;
-  color: #334155;
+  color: #1c1c1e;
   cursor: pointer;
+  user-select: none;
 }
 
 .toggle-control input {
@@ -391,12 +392,12 @@ textarea {
 }
 
 .toggle-switch {
-  width: 36px;
-  height: 20px;
-  background-color: #cbd5e1;
-  border-radius: 20px;
+  width: 44px;
+  height: 26px;
+  background-color: #e5e5ea;
+  border-radius: 26px;
   position: relative;
-  transition: background-color 0.2s;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
 }
 
@@ -405,20 +406,20 @@ textarea {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: white;
-  transition: transform 0.2s;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  background: #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .toggle-control input:checked + .toggle-switch {
-  background-color: #0284c7;
+  background-color: #34c759;
 }
 
 .toggle-control input:checked + .toggle-switch::after {
-  transform: translateX(16px);
+  transform: translateX(18px);
 }
 
 /* ==========================================================================
@@ -1123,135 +1124,8 @@ textarea {
   margin-top: 4px;
 }
 
-/* ==========================================================================
-   SLIDE-OVER HISTORY DRAWER
-   ========================================================================== */
-.history-drawer-backdrop {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
-}
 
-.history-drawer-backdrop.active {
-  display: block;
-}
-
-.history-drawer {
-  position: fixed;
-  top: 0;
-  right: -380px;
-  width: 360px;
-  height: 100%;
-  background: #ffffff;
-  box-shadow: var(--shadow-lg);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  transition: right 0.25s ease-in-out;
-}
-
-.history-drawer.active {
-  right: 0;
-}
-
-.drawer-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.drawer-header h3 {
-  font-size: 1rem;
-  color: var(--primary-navy);
-}
-
-.drawer-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.history-item {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: var(--radius-sm);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  transition: all 0.15s ease;
-}
-
-.history-item:hover {
-  border-color: #0284c7;
-  background: #ffffff;
-  box-shadow: var(--shadow-sm);
-}
-
-.history-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.history-receipt-no {
-  font-weight: 700;
-  color: #c91818;
-  font-size: 0.88rem;
-}
-
-.history-date {
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-.history-donor {
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: #0f172a;
-}
-
-.history-item-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 4px;
-}
-
-.history-amount {
-  font-weight: 800;
-  color: #15803d;
-  font-size: 0.98rem;
-}
-
-.history-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.drawer-footer {
-  padding: 14px 20px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.empty-history {
-  color: #94a3b8;
-  font-size: 0.85rem;
-  text-align: center;
-  padding: 40px 10px;
-}
-
-/* Toast */
+/* Toast Notification */
 .toast-notification {
   position: fixed;
   bottom: 24px;
@@ -1268,6 +1142,12 @@ textarea {
   transition: all 0.25s ease;
   pointer-events: none;
   z-index: 1000;
+}
+
+.toast-notification.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 /* ==========================================================================
@@ -1929,11 +1809,11 @@ textarea {
 }
 
 /* ==========================================================================
-   MOBILE & TABLET RESPONSIVENESS
+   MOBILE & TABLET RESPONSIVENESS (IPHONE / IOS POLISHED DESIGN)
    Ensures seamless phone & tablet display while keeping desktop layout unchanged
    ========================================================================== */
 
-/* Tablet & Mobile Breakpoint (<= 1024px) */
+/* Tablet Breakpoint (<= 1024px) */
 @media (max-width: 1024px) {
   .main-content {
     grid-template-columns: 1fr;
@@ -1946,21 +1826,26 @@ textarea {
     height: auto;
     overflow: visible;
     border-right: none;
-    border-bottom: 2px solid #cbd5e1;
-    padding: 24px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    background: #f2f2f7;
+    padding: 24px 18px;
   }
 
   .preview-panel {
     height: auto;
     min-height: 550px;
     overflow: visible;
+    background-color: #1c1c1e;
   }
 
   .preview-toolbar {
     position: sticky;
     top: 0;
     z-index: 30;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: rgba(30, 30, 32, 0.88);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
   }
 
   .paper-viewport {
@@ -1978,7 +1863,7 @@ textarea {
   .mobile-quick-nav {
     display: block;
     position: fixed;
-    bottom: 20px;
+    bottom: 22px;
     right: 20px;
     z-index: 90;
   }
@@ -1987,16 +1872,19 @@ textarea {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    background: rgba(0, 122, 255, 0.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 0.5px solid rgba(255, 255, 255, 0.35);
     border-radius: 30px;
-    padding: 10px 18px;
+    padding: 11px 20px;
     font-size: 0.85rem;
-    font-weight: 700;
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    box-shadow: 0 8px 24px rgba(0, 122, 255, 0.38);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform 0.15s ease, background 0.15s ease;
   }
 
   .mobile-jump-btn:active {
@@ -2013,6 +1901,10 @@ textarea {
     position: sticky;
     top: 0;
     z-index: 50;
+    background: rgba(15, 35, 62, 0.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.16);
   }
 
   .header-left {
@@ -2022,23 +1914,27 @@ textarea {
   }
 
   .header-left h1 {
-    font-size: 1rem;
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
   }
 
   .header-actions {
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    gap: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: auto;
   }
 
   .header-actions .btn {
-    padding: 7px 11px;
+    padding: 8px 14px;
     font-size: 0.82rem;
-    gap: 5px;
+    border-radius: 10px;
+    font-weight: 600;
   }
 
   .editor-panel {
-    padding: 18px 14px;
+    padding: 16px 14px;
   }
 
   .preview-toolbar {
@@ -2060,9 +1956,10 @@ textarea {
   }
 
   .zoom-controls .btn-icon {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     font-size: 0.8rem;
+    border-radius: 7px;
   }
 
   .paper-viewport {
@@ -2070,52 +1967,207 @@ textarea {
   }
 }
 
-/* Mobile Phones (<= 640px) */
+/* Mobile Phones - iPhone / iOS Experience (<= 640px) */
 @media (max-width: 640px) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #f2f2f7;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF UI Text", "Helvetica Neue", sans-serif;
+  }
+
+  /* iOS Grouped Panel Style */
+  .editor-panel {
+    background-color: #f2f2f7;
+    padding: 12px 10px 30px;
+  }
+
+  .panel-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 14px rgba(0, 0, 0, 0.02);
+    padding: 16px 14px;
+  }
+
+  .panel-header h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #1c1c1e;
+  }
+
+  .panel-header .subtext {
+    font-size: 0.8rem;
+    color: #8e8e93;
+    margin-top: 2px;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
 
   .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
-  /* Prevent auto-zooming on input focus in iOS Safari */
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #48484a;
+    letter-spacing: 0.1px;
+    margin-bottom: 6px;
+  }
+
+  /* iOS Inset Form Controls (strictly 16px prevents iOS tap zoom) */
   input[type="text"],
   input[type="email"],
   input[type="number"],
   input[type="date"],
   select,
   textarea {
-    font-size: 16px;
-    padding: 9px 12px;
+    font-size: 16px !important;
+    padding: 11px 14px;
+    background: #f8f8fa;
+    border: 1px solid #d1d1d6;
+    border-radius: 11px;
+    color: #1c1c1e;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    background: #ffffff;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3.5px rgba(0, 122, 255, 0.16);
+  }
+
+  .currency-input input {
+    padding-left: 28px;
   }
 
   .currency-symbol {
+    font-size: 1rem;
+    left: 12px;
+    color: #8e8e93;
+    font-weight: 600;
+  }
+
+  .input-with-action .btn-icon {
+    width: 44px;
+    height: 44px;
+    background: #eef5ff;
+    color: #007aff;
+    border: 1px solid #c8e0ff;
+    border-radius: 10px;
+    font-weight: 700;
     font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  /* iOS Inset Accordion / Disclosure Groups */
+  .accordion-section {
+    border-radius: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   }
 
   .accordion-section summary {
-    padding: 10px 12px;
-    font-size: 0.86rem;
+    padding: 13px 14px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1c1c1e;
+    background: #fdfdfd;
+    transition: background 0.15s ease;
+  }
+
+  .accordion-section summary:active {
+    background: #f2f2f7;
+  }
+
+  .accordion-section[open] summary {
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.07);
   }
 
   .accordion-body {
-    padding: 12px 10px;
+    padding: 14px;
+    background: #ffffff;
   }
 
+  /* iOS Switch Rows */
   .toggle-control {
-    font-size: 0.82rem;
-    padding: 3px 0;
+    font-size: 0.86rem;
+    padding: 4px 0;
+    font-weight: 500;
+    color: #1c1c1e;
+  }
+
+  .toggle-control:active {
+    opacity: 0.8;
+  }
+
+  /* Template Pill Group iOS Segmented Control */
+  .template-pill-group {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 3px;
+    border-radius: 10px;
+    border: 0.5px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .template-tab {
+    font-size: 0.76rem;
+    padding: 5px 9px;
+    border-radius: 7px;
+    font-weight: 600;
+  }
+
+  .template-tab.active {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Dynamic Island Style Notification Toast */
+  .toast-notification {
+    position: fixed;
+    top: 16px;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(28, 28, 30, 0.92);
+    backdrop-filter: saturate(180%) blur(25px);
+    -webkit-backdrop-filter: saturate(180%) blur(25px);
+    color: #ffffff;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    white-space: nowrap;
+    max-width: 90vw;
+    text-align: center;
+  }
+
+  .toast-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }
 
-/* Small Mobile Phones (<= 520px) */
+/* Small iPhone / Mobile (<= 520px) */
 @media (max-width: 520px) {
   .app-header {
-    padding: 8px 12px;
-    gap: 8px;
+    padding: 9px 12px;
+    gap: 10px;
     flex-direction: column;
     align-items: stretch;
   }
@@ -2130,9 +2182,10 @@ textarea {
   }
 
   .header-left h1 {
-    font-size: 0.84rem;
+    font-size: 0.86rem;
     line-height: 1.25;
     font-weight: 700;
+    letter-spacing: -0.2px;
     white-space: normal;
     word-break: break-word;
     margin: 0;
@@ -2145,84 +2198,89 @@ textarea {
     font-size: 0.7rem;
     gap: 4px;
     flex-shrink: 0;
+    border-radius: 6px;
   }
 
   .app-badge svg {
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
   }
 
+  /* Two clean, prominent action pills (Download & Print) */
   .header-actions {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 5px;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
   .header-actions .btn {
     width: 100%;
     justify-content: center;
-    padding: 7px 3px;
-    font-size: 0.74rem;
-    font-weight: 700;
-    gap: 3px;
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    gap: 6px;
     min-width: 0;
     white-space: nowrap;
-    border-radius: 6px;
+    border-radius: 12px;
+    letter-spacing: -0.1px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.12s ease, opacity 0.12s ease;
+  }
+
+  .header-actions .btn:active {
+    transform: scale(0.96);
+    opacity: 0.9;
   }
 
   .header-actions .btn svg {
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
     flex-shrink: 0;
   }
 
+  /* iOS specific button tints */
+  #btnDownloadImage {
+    background: linear-gradient(180deg, #007aff 0%, #0066d6 100%);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 122, 255, 0.35);
+  }
+
+  #btnPrintReceipt {
+    background: linear-gradient(180deg, #34c759 0%, #28a745 100%);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(52, 199, 89, 0.35);
+  }
+
   .editor-panel {
-    padding: 14px 10px;
+    padding: 10px 8px 24px;
   }
 
-  .panel-header h2 {
-    font-size: 1.05rem;
-  }
-
-  .panel-header .subtext {
-    font-size: 0.78rem;
+  .panel-card {
+    border-radius: 14px;
+    padding: 14px 12px;
   }
 
   .preview-toolbar {
-    padding: 6px 10px;
+    padding: 8px 12px;
     flex-direction: row;
     justify-content: space-between;
   }
 
   .paper-viewport {
-    padding: 14px 4px;
-  }
-
-  .history-drawer {
-    width: 100%;
-    right: -100%;
-  }
-
-  .history-drawer.active {
-    right: 0;
-  }
-
-  .toast-notification {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    max-width: calc(100% - 24px);
-    text-align: center;
+    padding: 14px 4px 28px;
   }
 
   .mobile-quick-nav {
-    bottom: 16px;
-    right: 16px;
+    bottom: 18px;
+    right: 14px;
   }
 
   .mobile-jump-btn {
-    padding: 8px 14px;
-    font-size: 0.8rem;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    border-radius: 24px;
   }
 }
+

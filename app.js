@@ -503,9 +503,12 @@ document.addEventListener('DOMContentLoaded', () => {
   btnDownloadImage.addEventListener('click', () => {
     showToast('Generating high-resolution PNG...');
     const targetElement = activeTemplate === 'portrait' ? certificate80GCard : receiptCard;
+    if (!targetElement) return;
 
     const originalTransform = targetElement.style.transform;
+    const originalMarginBottom = targetElement.style.marginBottom;
     targetElement.style.transform = 'none';
+    targetElement.style.marginBottom = '0px';
 
     if (window.html2canvas) {
       window.html2canvas(targetElement, {
@@ -514,6 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundColor: '#ffffff'
       }).then(canvas => {
         targetElement.style.transform = originalTransform;
+        targetElement.style.marginBottom = originalMarginBottom;
         const link = document.createElement('a');
         const fileName = (receiptNoInput.value || 'receipt').replace(/[^a-zA-Z0-9_-]/g, '_');
         link.download = `Donation_Receipt_${fileName}.png`;
@@ -522,6 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('PNG downloaded successfully!');
       }).catch(err => {
         targetElement.style.transform = originalTransform;
+        targetElement.style.marginBottom = originalMarginBottom;
         console.error('Download error:', err);
         showToast('Error generating image. You can use "Print / PDF" instead.');
       });
@@ -532,16 +537,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Zoom Controls ---
   function applyZoom(zoom) {
-    currentZoom = Math.min(Math.max(zoom, 0.4), 1.6);
+    currentZoom = Math.min(Math.max(zoom, 0.2), 1.6);
     const targetElement = activeTemplate === 'portrait' ? certificate80GCard : receiptCard;
+    if (!targetElement) return;
+
     targetElement.style.transform = `scale(${currentZoom})`;
-    zoomLevelDisplay.textContent = `${Math.round(currentZoom * 100)}%`;
+    targetElement.style.transformOrigin = 'top center';
+
+    // Collapses unscaled vertical blank space when scaled down on mobile/tablet
+    const unscaledHeight = activeTemplate === 'portrait' ? 1080 : 680;
+    if (currentZoom < 1) {
+      const reducedPx = Math.round(unscaledHeight * (1 - currentZoom));
+      targetElement.style.marginBottom = `-${reducedPx}px`;
+    } else {
+      targetElement.style.marginBottom = '0px';
+    }
+
+    if (zoomLevelDisplay) {
+      zoomLevelDisplay.textContent = `${Math.round(currentZoom * 100)}%`;
+    }
   }
 
   function autoFitToScreen() {
-    const viewportWidth = paperViewport.clientWidth - 40;
+    if (!paperViewport) return;
+    const padding = window.innerWidth <= 576 ? 16 : (window.innerWidth <= 768 ? 24 : 40);
+    const viewportWidth = paperViewport.clientWidth - padding;
     const targetWidth = activeTemplate === 'portrait' ? 794 : 1020;
-    if (viewportWidth < targetWidth) {
+    if (viewportWidth > 0 && viewportWidth < targetWidth) {
       const fitZoom = (viewportWidth / targetWidth);
       applyZoom(fitZoom);
     } else {
@@ -554,9 +576,10 @@ document.addEventListener('DOMContentLoaded', () => {
   btnZoomReset.addEventListener('click', autoFitToScreen);
 
   window.addEventListener('resize', () => {
-    if (window.innerWidth < 1200) {
-      autoFitToScreen();
-    }
+    autoFitToScreen();
+  });
+  window.addEventListener('orientationchange', () => {
+    setTimeout(autoFitToScreen, 200);
   });
 
   // --- LocalStorage History ---
@@ -692,8 +715,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2800);
   }
 
+  // --- Mobile Quick Jump Button ---
+  const btnMobileQuickJump = document.getElementById('btnMobileQuickJump');
+  const jumpBtnText = document.getElementById('jumpBtnText');
+  const previewPanel = document.querySelector('.preview-panel');
+  const receiptForm = document.getElementById('receiptForm');
+
+  if (btnMobileQuickJump) {
+    let atPreview = false;
+
+    btnMobileQuickJump.addEventListener('click', () => {
+      if (!atPreview) {
+        if (previewPanel) {
+          previewPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        if (receiptForm) {
+          receiptForm.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth <= 1024 && previewPanel) {
+        const previewRect = previewPanel.getBoundingClientRect();
+        if (previewRect.top < window.innerHeight * 0.45) {
+          atPreview = true;
+          if (jumpBtnText) jumpBtnText.textContent = 'Edit Form ↑';
+        } else {
+          atPreview = false;
+          if (jumpBtnText) jumpBtnText.textContent = 'View Preview ↓';
+        }
+      }
+    }, { passive: true });
+  }
+
   // Initialize
   switchTemplate('portrait');
   updatePreview();
   renderHistory();
+  autoFitToScreen();
+  setTimeout(autoFitToScreen, 150);
 });

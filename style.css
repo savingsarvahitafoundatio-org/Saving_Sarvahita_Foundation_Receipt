@@ -1888,27 +1888,285 @@ textarea {
 }
 
 /* ==========================================================================
-   RESPONSIVENESS (Small screens)
+   MOBILE & TABLET RESPONSIVENESS
+   Ensures seamless phone & tablet display while keeping desktop layout unchanged
    ========================================================================== */
-@media (max-width: 992px) {
+
+/* Tablet & Mobile Breakpoint (<= 1024px) */
+@media (max-width: 1024px) {
   .main-content {
     grid-template-columns: 1fr;
     height: auto;
+    min-height: calc(100vh - 58px);
     overflow: visible;
   }
 
   .editor-panel {
     height: auto;
+    overflow: visible;
     border-right: none;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 2px solid #cbd5e1;
+    padding: 24px 20px;
   }
 
   .preview-panel {
     height: auto;
-    min-height: 500px;
+    min-height: 550px;
+    overflow: visible;
+  }
+
+  .preview-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
   .paper-viewport {
-    padding: 15px;
+    padding: 24px 12px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  /* Mobile floating quick navigation button */
+  .mobile-quick-nav {
+    display: block;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 90;
+  }
+
+  .mobile-jump-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 30px;
+    padding: 10px 18px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-jump-btn:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Tablet Portrait & Large Phones (<= 768px) */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-left {
+    gap: 10px;
+    flex: 1 1 auto;
+    min-width: 200px;
+  }
+
+  .header-left h1 {
+    font-size: 1rem;
+  }
+
+  .header-actions {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .header-actions .btn {
+    padding: 7px 11px;
+    font-size: 0.82rem;
+    gap: 5px;
+  }
+
+  .editor-panel {
+    padding: 18px 14px;
+  }
+
+  .preview-toolbar {
+    padding: 8px 14px;
+  }
+
+  .preview-indicator {
+    font-size: 0.78rem;
+  }
+
+  .paper-size-badge {
+    font-size: 0.72rem;
+    margin-left: 6px;
+  }
+
+  .zoom-controls {
+    gap: 4px;
+    font-size: 0.78rem;
+  }
+
+  .zoom-controls .btn-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 0.8rem;
+  }
+
+  .paper-viewport {
+    padding: 18px 8px;
+  }
+}
+
+/* Mobile Phones (<= 640px) */
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  /* Prevent auto-zooming on input focus in iOS Safari */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: 16px;
+    padding: 9px 12px;
+  }
+
+  .currency-symbol {
+    font-size: 0.95rem;
+  }
+
+  .accordion-section summary {
+    padding: 10px 12px;
+    font-size: 0.86rem;
+  }
+
+  .accordion-body {
+    padding: 12px 10px;
+  }
+
+  .toggle-control {
+    font-size: 0.82rem;
+    padding: 3px 0;
+  }
+}
+
+/* Small Mobile Phones (<= 520px) */
+@media (max-width: 520px) {
+  .app-header {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .header-left {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .header-left h1 {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .app-badge {
+    padding: 3px 6px;
+    font-size: 0.72rem;
+    gap: 4px;
+  }
+
+  .app-badge svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .header-actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 7px 4px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+
+  .header-actions .btn svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .editor-panel {
+    padding: 14px 10px;
+  }
+
+  .panel-header h2 {
+    font-size: 1.05rem;
+  }
+
+  .panel-header .subtext {
+    font-size: 0.78rem;
+  }
+
+  .preview-toolbar {
+    padding: 6px 10px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .paper-viewport {
+    padding: 14px 4px;
+  }
+
+  .history-drawer {
+    width: 100%;
+    right: -100%;
+  }
+
+  .history-drawer.active {
+    right: 0;
+  }
+
+  .toast-notification {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100% - 24px);
+    text-align: center;
+  }
+
+  .mobile-quick-nav {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .mobile-jump-btn {
+    padding: 8px 14px;
+    font-size: 0.8rem;
   }
 }

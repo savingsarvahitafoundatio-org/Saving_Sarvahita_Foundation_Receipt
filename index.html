@@ -10,6 +10,12 @@
   <link rel="stylesheet" href="style.css">
   <!-- html2canvas for instant PNG download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- SheetJS for Excel (.xlsx, .xls) and CSV reading/writing -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- JSZip for bulk bundles -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- jsPDF for creating separate PDF files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="app-container">
@@ -56,8 +62,31 @@
       <aside class="editor-panel no-print">
         <div class="panel-card">
           <div class="panel-header">
-            <h2>Receipt Details</h2>
-            <span class="subtext">Fill in details; the preview updates instantly</span>
+            <div class="panel-title-wrap">
+              <h2>Receipt Generator</h2>
+              <span class="subtext">Single entry or bulk generate via Excel / CSV</span>
+            </div>
+            <!-- Mode Switcher: Single Entry vs Bulk Excel / CSV -->
+            <div class="mode-segmented-control" role="tablist" aria-label="Generator Mode">
+              <button type="button" class="mode-tab active" id="tabModeSingle" data-mode="single">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+                <span>Single Receipt</span>
+              </button>
+              <button type="button" class="mode-tab" id="tabModeBulk" data-mode="bulk">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <path d="M8 13h2"></path>
+                  <path d="M8 17h2"></path>
+                  <path d="M14 13h2"></path>
+                  <path d="M14 17h2"></path>
+                </svg>
+                <span>Bulk Excel / CSV</span>
+              </button>
+            </div>
           </div>
 
           <form id="receiptForm" onsubmit="event.preventDefault();">
@@ -314,6 +343,116 @@
             </details>
 
           </form>
+
+          <!-- Bulk Excel / CSV Upload & Management Section -->
+          <div id="bulkUploadSection" class="bulk-section" style="display: none;">
+            <!-- Download Sample Excel Template -->
+            <div class="bulk-template-card">
+              <div class="template-card-info">
+                <strong>Need an Excel format template?</strong>
+                <span>Download our pre-formatted spreadsheet with column names and sample donor rows.</span>
+              </div>
+              <button type="button" id="btnDownloadSampleExcel" class="btn btn-outline-primary btn-sm">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Download Sample Excel</span>
+              </button>
+            </div>
+
+            <!-- Upload Dropzone -->
+            <div class="bulk-dropzone" id="bulkDropzone">
+              <input type="file" id="bulkFileInput" accept=".xlsx, .xls, .csv" style="display: none;">
+              <div class="dropzone-icon">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <polyline points="9 15 12 12 15 15"></polyline>
+                </svg>
+              </div>
+              <div class="dropzone-title">Drop Excel / CSV here or Tap to Upload</div>
+              <div class="dropzone-subtitle">Supports .xlsx, .xls, and .csv with multiple rows</div>
+              <button type="button" id="btnSelectFile" class="btn btn-primary btn-sm">Choose Spreadsheet File</button>
+            </div>
+
+            <!-- Batch Queue Card (Visible when file loaded) -->
+            <div id="bulkQueueContainer" class="bulk-queue-container" style="display: none;">
+              <div class="batch-file-header">
+                <div class="batch-file-meta">
+                  <span class="file-name-badge" id="bulkFileName">data.xlsx</span>
+                  <span class="file-rows-badge" id="bulkRowCount">0 Receipts</span>
+                </div>
+                <button type="button" id="btnClearBulkData" class="btn-text-danger" title="Clear and upload new file">
+                  ✕ Clear File
+                </button>
+              </div>
+
+              <!-- Interactive Row Browser (Updates Live Preview) -->
+              <div class="batch-navigator-bar">
+                <button type="button" id="btnBulkPrev" class="btn btn-secondary btn-sm" title="Previous receipt in batch">
+                  ◀ Prev
+                </button>
+                <div class="batch-nav-status">
+                  <span>Viewing Live Receipt</span>
+                  <strong id="bulkCurrentRowIndicator">1 of 1</strong>
+                </div>
+                <button type="button" id="btnBulkNext" class="btn btn-secondary btn-sm" title="Next receipt in batch">
+                  Next ▶
+                </button>
+              </div>
+
+              <!-- Progress Bar for ZIP Generation -->
+              <div id="bulkProgressContainer" class="bulk-progress-container" style="display: none;">
+                <div class="progress-bar-track">
+                  <div id="bulkProgressFill" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+                <div class="progress-status-text" id="bulkProgressStatus">Generating images... 0%</div>
+              </div>
+
+              <!-- Bulk Generation Action Buttons -->
+              <div class="bulk-action-buttons">
+                <button type="button" id="btnBulkDownloadPdfsZip" class="btn btn-accent full-width" title="Generate individual separate PDF file for each receipt and save them in a ZIP archive">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <polyline points="9 15 12 12 15 15"></polyline>
+                  </svg>
+                  <span>Download All Separate PDFs (ZIP)</span>
+                </button>
+                <button type="button" id="btnBulkDownloadAllZip" class="btn btn-primary full-width" title="Download all receipt images as PNG files in a ZIP">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                  <span>Download All PNGs (ZIP)</span>
+                </button>
+              </div>
+
+              <!-- Quick Table of Uploaded Receipts -->
+              <div class="batch-table-header-title">Spreadsheet Rows Preview (Tap row to view)</div>
+              <div class="batch-table-wrapper">
+                <table class="batch-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Receipt No</th>
+                      <th>Donor Name</th>
+                      <th>Amount</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bulkTableBody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -887,6 +1026,9 @@
       </div><!-- End .paper-viewport -->
       </section>
     </main>
+
+    <!-- Hidden Bulk Multi-Page Print Container -->
+    <div id="bulkPrintContainer" class="bulk-print-container"></div>
 
     <!-- Mobile Quick View Jump Button (Visible only on tablets/phones <= 1024px) -->
     <div class="mobile-quick-nav no-print">

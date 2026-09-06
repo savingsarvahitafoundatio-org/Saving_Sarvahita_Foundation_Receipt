@@ -189,6 +189,36 @@ body {
   background: #b91c1c;
 }
 
+.btn-outline-primary {
+  background: #ffffff;
+  color: #007aff;
+  border: 1.5px solid #007aff;
+}
+
+.btn-outline-primary:hover {
+  background: #f0f7ff;
+  border-color: #0056b3;
+}
+
+.btn-text-danger {
+  background: transparent;
+  color: #ff3b30;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-text-danger:hover {
+  background: rgba(255, 59, 48, 0.1);
+}
+
 .btn-sm {
   padding: 6px 10px;
   font-size: 0.8rem;
@@ -246,15 +276,63 @@ body {
   gap: 16px;
 }
 
-.panel-header h2 {
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel-title-wrap h2 {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--primary-navy);
 }
 
-.panel-header .subtext {
+.panel-title-wrap .subtext {
   font-size: 0.82rem;
   color: var(--text-muted);
+}
+
+/* iOS Segmented Control for Single vs Bulk mode */
+.mode-segmented-control {
+  display: flex;
+  background: #e5e5ea;
+  border-radius: 11px;
+  padding: 3px;
+  gap: 3px;
+  width: 100%;
+}
+
+.mode-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #636366;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+}
+
+.mode-tab svg {
+  flex-shrink: 0;
+}
+
+.mode-tab:hover {
+  color: #1c1c1e;
+}
+
+.mode-tab.active {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 /* Form Styles */
@@ -420,6 +498,308 @@ textarea {
 
 .toggle-control input:checked + .toggle-switch::after {
   transform: translateX(18px);
+}
+
+/* ==========================================================================
+   BULK EXCEL / CSV GENERATOR STYLES
+   ========================================================================== */
+.bulk-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Download Template Card */
+.bulk-template-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.template-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.template-card-info strong {
+  font-size: 0.86rem;
+  color: #0369a1;
+}
+
+.template-card-info span {
+  font-size: 0.77rem;
+  color: #0284c7;
+  line-height: 1.35;
+}
+
+/* Upload Dropzone */
+.bulk-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 26px 18px;
+  background: #f8fafc;
+  border: 2px dashed #0284c7;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bulk-dropzone:hover,
+.bulk-dropzone.dragover {
+  background: #f0f9ff;
+  border-color: #0369a1;
+  transform: scale(1.01);
+}
+
+.dropzone-icon {
+  color: #0284c7;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropzone-title {
+  font-weight: 700;
+  font-size: 0.94rem;
+  color: #0f172a;
+  margin-bottom: 3px;
+}
+
+.dropzone-subtitle {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+/* Batch Queue Container */
+.bulk-queue-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.batch-file-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
+.batch-file-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.file-name-badge {
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-rows-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #dcfce7;
+  color: #15803d;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #bbf7d0;
+}
+
+/* Interactive Navigator */
+.batch-navigator-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.batch-nav-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.batch-nav-status span {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.batch-nav-status strong {
+  font-size: 0.95rem;
+  color: #0284c7;
+  font-weight: 800;
+}
+
+/* Progress bar */
+.bulk-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0284c7 0%, #16a34a 100%);
+  border-radius: 4px;
+  transition: width 0.15s ease;
+}
+
+.progress-status-text {
+  font-size: 0.78rem;
+  color: #334155;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Action Buttons */
+.bulk-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 4px 0 8px 0;
+}
+
+.bulk-action-buttons .btn {
+  padding: 11px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 10px;
+  letter-spacing: -0.1px;
+}
+
+/* Batch Table */
+.batch-table-header-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.batch-table-wrapper {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.batch-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.batch-table th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  padding: 8px 10px;
+  font-weight: 700;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  z-index: 2;
+}
+
+.batch-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+}
+
+.batch-table tr {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.batch-table tr:hover {
+  background: #f0f9ff;
+}
+
+.batch-table tr.active-batch-row {
+  background: #e0f2fe;
+  font-weight: 700;
+}
+
+.batch-view-pill {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.batch-actions-cell {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.batch-pdf-pill {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.batch-pdf-pill:hover {
+  opacity: 0.88;
 }
 
 /* ==========================================================================
@@ -1704,6 +2084,11 @@ textarea {
   display: block;
 }
 
+/* Bulk Print Container */
+.bulk-print-container {
+  display: none;
+}
+
 /* ==========================================================================
    PRINT STYLES: CLEAN, CRISP, 100% VECTOR PRECISION (EXACT 1 PAGE FIT)
    ========================================================================== */
@@ -1728,10 +2113,37 @@ textarea {
   .app-header,
   .editor-panel,
   .preview-toolbar,
-  .history-drawer,
-  .history-drawer-backdrop,
-  .toast-notification {
+  .toast-notification,
+  .mobile-quick-nav {
     display: none !important;
+  }
+
+  /* Multi-page bulk print mode */
+  body.bulk-printing-active .main-content,
+  body.bulk-printing-active .paper-stage,
+  body.bulk-printing-active .paper-viewport,
+  body.bulk-printing-active .preview-panel {
+    display: none !important;
+  }
+
+  body.bulk-printing-active .bulk-print-container {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.bulk-printing-active .bulk-print-page {
+    display: block !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    box-sizing: border-box !important;
+    padding: 8mm 12mm !important;
+    margin: 0 auto !important;
+    background: #ffffff !important;
+    overflow: hidden !important;
   }
 
   .main-content {
@@ -2281,6 +2693,28 @@ textarea {
     padding: 10px 16px;
     font-size: 0.82rem;
     border-radius: 24px;
+  }
+
+  .bulk-template-card {
+    padding: 10px 12px;
+  }
+
+  .bulk-dropzone {
+    padding: 20px 12px;
+  }
+
+  .batch-navigator-bar {
+    padding: 6px 10px;
+  }
+
+  .batch-navigator-bar .btn {
+    padding: 6px 10px;
+    font-size: 0.76rem;
+  }
+
+  .batch-table th, .batch-table td {
+    padding: 6px 8px;
+    font-size: 0.75rem;
   }
 }
 
